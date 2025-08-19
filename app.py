@@ -4,7 +4,6 @@ Python Interactive Textbook - Production Ready Streamlit Application
 A comprehensive, industry-level educational platform for learning Python programming
 with interactive features, progress tracking, and book-like user experience.
 
-
 Author: AI Assistant
 Version: 2.0.0
 License: MIT
@@ -138,7 +137,7 @@ class ChapterRepository:
     @st.cache_data(ttl=3600)
     def get_all_chapters() -> List[ChapterData]:
         """Get all chapter data with caching"""
-        return [
+        chapters = [
             ChapterData(
                 id="python_intro",
                 title="Chapter 1: Welcome to Python",
@@ -447,7 +446,343 @@ print(f"📈 Category: {category}")
                 keywords=["conditionals", "if", "elif", "else", "boolean", "logic", "truthiness"]
             )
         ]
+        # Add new chapters (6 onwards)
+        chapters += [
+            ChapterData(
+                id="functions",
+                title="Chapter 6: Functions",
+                content="""
+Functions are reusable blocks of code that perform a specific task. They help organize code, avoid repetition, and make programs easier to read and maintain.
 
+In Python, you define a function using the `def` keyword, followed by the function name and parentheses.
+                """,
+                code_example='''# Defining and calling a function
+def greet(name):
+    print(f"Hello, {name}!")
+
+greet("Alice")
+greet("Bob")
+''',
+                interactive_code='# Write your own function!\ndef square(x):\n    return x * x\n\nprint(square(5))',
+                quiz=QuizData(
+                    question="What keyword is used to define a function in Python?",
+                    options=["func", "define", "def", "function"],
+                    correct_index=2,
+                    explanation="The 'def' keyword is used to define a function in Python.",
+                    difficulty="beginner"
+                ),
+                prerequisites=["control_flow"],
+                keywords=["functions", "def", "parameters", "return"]
+            ),
+            ChapterData(
+                id="data_structures",
+                title="Chapter 7: Data Structures (Lists, Tuples, Dicts, Sets)",
+                content="""
+Python provides several built-in data structures: lists, tuples, dictionaries, and sets. Each serves a different purpose and has unique properties.
+                """,
+                code_example='''# Examples of data structures
+my_list = [1, 2, 3]
+my_tuple = (1, 2, 3)
+my_dict = {"a": 1, "b": 2}
+my_set = {1, 2, 3}
+
+print(type(my_list), type(my_tuple), type(my_dict), type(my_set))
+''',
+                interactive_code='# Try creating your own data structures\ncolors = ["red", "green", "blue"]\nprint(colors)',
+                quiz=QuizData(
+                    question="Which data structure is immutable?",
+                    options=["List", "Tuple", "Dictionary", "Set"],
+                    correct_index=1,
+                    explanation="Tuples are immutable, meaning they cannot be changed after creation.",
+                    difficulty="beginner"
+                ),
+                prerequisites=["functions"],
+                keywords=["lists", "tuples", "dicts", "sets"]
+            ),
+            ChapterData(
+                id="strings_regex",
+                title="Chapter 8: Strings & Regex",
+                content="""
+Strings are sequences of characters. Python provides powerful tools for string manipulation, including regular expressions (regex) for pattern matching.
+                """,
+                code_example='''# Basic string operations
+text = "Hello, World!"
+print(text.lower())
+print(text.replace("World", "Python"))
+''',
+                interactive_code='# Try some string operations\ns = "Python123"\nprint(s.isalpha())\nprint(s.isdigit())',
+                quiz=QuizData(
+                    question="What does 'regex' stand for?",
+                    options=["Regular Expression", "Region Example", "Register Exit", "Random Example"],
+                    correct_index=0,
+                    explanation="Regex stands for Regular Expression.",
+                    difficulty="beginner"
+                ),
+                prerequisites=["data_structures"],
+                keywords=["strings", "regex", "pattern matching"]
+            ),
+            ChapterData(
+                id="modules_packages",
+                title="Chapter 9: Modules & Packages",
+                content="""
+Modules and packages help organize Python code into reusable files and directories. You can import standard or custom modules using the `import` statement.
+                """,
+                code_example='''# Importing a module
+import math
+print(math.sqrt(16))
+''',
+                interactive_code='# Try importing a module\nimport random\nprint(random.randint(1, 10))',
+                quiz=QuizData(
+                    question="Which keyword is used to import a module?",
+                    options=["include", "require", "import", "module"],
+                    correct_index=2,
+                    explanation="The 'import' keyword is used to import modules in Python.",
+                    difficulty="beginner"
+                ),
+                prerequisites=["strings_regex"],
+                keywords=["modules", "packages", "import"]
+            ),
+            ChapterData(
+                id="file_handling",
+                title="Chapter 10: File Handling",
+                content="""
+Python can read from and write to files using built-in functions like `open()`. Always close files after use, or use a `with` statement for automatic handling.
+                """,
+                code_example='''# Writing to a file
+with open("example.txt", "w") as f:
+    f.write("Hello, file!")
+''',
+                interactive_code='# Try writing and reading a file\nwith open("test.txt", "w") as f:\n    f.write("Python!")\nwith open("test.txt") as f:\n    print(f.read())',
+                quiz=QuizData(
+                    question="Which statement ensures a file is closed automatically?",
+                    options=["with", "close", "auto", "end"],
+                    correct_index=0,
+                    explanation="The 'with' statement ensures files are closed automatically.",
+                    difficulty="beginner"
+                ),
+                prerequisites=["modules_packages"],
+                keywords=["file handling", "open", "with"]
+            ),
+            ChapterData(
+                id="error_handling",
+                title="Chapter 11: Error Handling & Exceptions",
+                content="""
+Python uses exceptions to handle errors gracefully. Use `try`, `except`, `finally` blocks to manage errors and cleanup.
+                """,
+                code_example='''# Handling exceptions
+try:
+    x = 1 / 0
+except ZeroDivisionError:
+    print("Cannot divide by zero!")
+''',
+                interactive_code='# Try handling an error\ntry:\n    print(10 / 0)\nexcept Exception as e:\n    print("Error:", e)',
+                quiz=QuizData(
+                    question="Which keyword is used to handle exceptions?",
+                    options=["catch", "except", "error", "handle"],
+                    correct_index=1,
+                    explanation="The 'except' keyword is used to handle exceptions.",
+                    difficulty="beginner"
+                ),
+                prerequisites=["file_handling"],
+                keywords=["exceptions", "try", "except"]
+            ),
+            ChapterData(
+                id="oop",
+                title="Chapter 12: OOP in Python",
+                content="""
+Object-Oriented Programming (OOP) allows you to structure code using classes and objects. Python supports OOP with classes, inheritance, and more.
+                """,
+                code_example='''# Defining a class
+class Dog:
+    def __init__(self, name):
+        self.name = name
+
+    def bark(self):
+        print(f"{self.name} says woof!")
+
+d = Dog("Fido")
+d.bark()
+''',
+                interactive_code='# Try creating a class\nclass Cat:\n    def meow(self):\n        print("Meow!")\nc = Cat()\nc.meow()',
+                quiz=QuizData(
+                    question="What is the method that initializes a new object called?",
+                    options=["__start__", "__init__", "__create__", "__new__"],
+                    correct_index=1,
+                    explanation="The '__init__' method initializes a new object.",
+                    difficulty="beginner"
+                ),
+                prerequisites=["error_handling"],
+                keywords=["oop", "class", "object", "inheritance"]
+            ),
+            ChapterData(
+                id="decorators_generators",
+                title="Chapter 13: Decorators & Generators",
+                content="""
+Decorators modify the behavior of functions. Generators allow you to iterate over data efficiently using `yield`.
+                """,
+                code_example='''# Example of a generator
+def count_up(n):
+    for i in range(n):
+        yield i
+
+for num in count_up(3):
+    print(num)
+''',
+                interactive_code='# Try a simple decorator\ndef my_decorator(f):\n    def wrapper():\n        print("Before")\n        f()\n        print("After")\n    return wrapper\n\n@my_decorator\ndef hello():\n    print("Hello!")\n\nhello()',
+                quiz=QuizData(
+                    question="Which keyword is used to create a generator?",
+                    options=["yield", "return", "gen", "next"],
+                    correct_index=0,
+                    explanation="The 'yield' keyword is used to create generators.",
+                    difficulty="intermediate"
+                ),
+                prerequisites=["oop"],
+                keywords=["decorators", "generators", "yield"]
+            ),
+            ChapterData(
+                id="itertools_fun_collections",
+                title="Chapter 14: Itertools, functools, collections",
+                content="""
+Python's standard library includes powerful modules for advanced data manipulation: `itertools`, `functools`, and `collections`.
+                """,
+                code_example='''# Using itertools
+import itertools
+for x in itertools.count(5, 2):
+    print(x)
+    if x > 10:
+        break
+''',
+                interactive_code='# Try using collections\nfrom collections import Counter\nc = Counter("banana")\nprint(c)',
+                quiz=QuizData(
+                    question="Which module provides tools for functional programming?",
+                    options=["collections", "functools", "itertools", "os"],
+                    correct_index=1,
+                    explanation="The 'functools' module provides tools for functional programming.",
+                    difficulty="intermediate"
+                ),
+                prerequisites=["decorators_generators"],
+                keywords=["itertools", "functools", "collections"]
+            ),
+            ChapterData(
+                id="venv_pip",
+                title="Chapter 15: Virtual Environments & PIP",
+                content="""
+Virtual environments isolate Python projects. PIP is Python's package installer. Use `python -m venv` and `pip install` to manage environments and packages.
+                """,
+                code_example='''# Creating a virtual environment (run in terminal)
+# python -m venv myenv
+# Activating and installing packages
+# myenv\\Scripts\\activate (Windows) or source myenv/bin/activate (Unix)
+# pip install requests
+''',
+                interactive_code='# Try importing a package (if installed)\nimport math\nprint(math.pi)',
+                quiz=QuizData(
+                    question="What command creates a new virtual environment?",
+                    options=["pip install venv", "python venv", "python -m venv", "venv create"],
+                    correct_index=2,
+                    explanation="Use 'python -m venv' to create a new virtual environment.",
+                    difficulty="beginner"
+                ),
+                prerequisites=["itertools_fun_collections"],
+                keywords=["venv", "pip", "virtualenv"]
+            ),
+            ChapterData(
+                id="popular_libs",
+                title="Chapter 16: Popular Libraries (numpy, pandas, matplotlib basics)",
+                content="""
+Python's ecosystem includes powerful libraries for data science and more: `numpy` for arrays, `pandas` for dataframes, `matplotlib` for plotting.
+                """,
+                code_example='''# Example: numpy array
+import numpy as np
+a = np.array([1, 2, 3])
+print(a)
+''',
+                interactive_code='# Try using pandas (if installed)\nimport pandas as pd\ndf = pd.DataFrame({"A": [1,2], "B": [3,4]})\nprint(df)',
+                quiz=QuizData(
+                    question="Which library is used for data visualization?",
+                    options=["numpy", "pandas", "matplotlib", "requests"],
+                    correct_index=2,
+                    explanation="Matplotlib is used for data visualization.",
+                    difficulty="beginner"
+                ),
+                prerequisites=["venv_pip"],
+                keywords=["numpy", "pandas", "matplotlib"]
+            ),
+            ChapterData(
+                id="intermediate_topics",
+                title="Chapter 17: Intermediate Topics (threads, multiprocessing)",
+                content="""
+Python supports concurrent programming with threads and processes. Use the `threading` and `multiprocessing` modules for parallel tasks.
+                """,
+                code_example='''# Example: threading
+import threading
+
+def hello():
+    print("Hello from thread!")
+
+t = threading.Thread(target=hello)
+t.start()
+t.join()
+''',
+                interactive_code='# Try a simple thread\nimport threading\ndef f():\n    print("Thread running")\nt = threading.Thread(target=f)\nt.start()\nt.join()',
+                quiz=QuizData(
+                    question="Which module is used for parallel processing?",
+                    options=["threading", "multiprocessing", "asyncio", "os"],
+                    correct_index=1,
+                    explanation="The 'multiprocessing' module is used for parallel processing.",
+                    difficulty="intermediate"
+                ),
+                prerequisites=["popular_libs"],
+                keywords=["threads", "multiprocessing", "concurrency"]
+            ),
+            ChapterData(
+                id="advanced_topics",
+                title="Chapter 18: Advanced (metaclasses, context managers)",
+                content="""
+Advanced Python features include metaclasses (classes of classes) and context managers (using `with` for resource management).
+                """,
+                code_example='''# Example: context manager
+with open("file.txt", "w") as f:
+    f.write("Hello!")
+''',
+                interactive_code='# Try a custom context manager\nclass MyCtx:\n    def __enter__(self):\n        print("Enter")\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        print("Exit")\nwith MyCtx():\n    print("Inside")',
+                quiz=QuizData(
+                    question="Which method is called when entering a context?",
+                    options=["__start__", "__enter__", "__init__", "__open__"],
+                    correct_index=1,
+                    explanation="The '__enter__' method is called when entering a context.",
+                    difficulty="advanced"
+                ),
+                prerequisites=["intermediate_topics"],
+                keywords=["metaclasses", "context managers", "with"]
+            ),
+            ChapterData(
+                id="final_project",
+                title="Chapter 19: Final Chapter – Build Your Own Project",
+                content="""
+Congratulations! It's time to apply your knowledge. In this final chapter, you'll plan and build your own Python project. Choose something meaningful to you—automation, data analysis, a game, or anything else.
+
+Remember to break your project into small steps, use functions and classes, and test as you go!
+                """,
+                code_example='''# Example project: Simple calculator
+def add(a, b):
+    return a + b
+
+print("Sum:", add(2, 3))
+''',
+                interactive_code='# Start your own project here!\n# For example, a simple to-do list\n',
+                quiz=QuizData(
+                    question="What is the most important step in building a project?",
+                    options=["Copy code", "Plan and break into steps", "Use only classes", "Skip testing"],
+                    correct_index=1,
+                    explanation="Planning and breaking the project into steps is crucial for success.",
+                    difficulty="beginner"
+                ),
+                prerequisites=["advanced_topics"],
+                keywords=["project", "application", "practice"]
+            ),
+        ]
+        return chapters
     @staticmethod
     def get_chapter_by_id(chapter_id: str) -> Optional[ChapterData]:
         """Get specific chapter by ID"""
