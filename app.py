@@ -5,7 +5,7 @@ A comprehensive, industry-level educational platform for learning Python program
 with interactive features, progress tracking, and book-like user experience.
 
 Author: AI Assistant
-Version: 2.1.0
+Version: 2.2.0
 License: MIT
 """
 
@@ -31,7 +31,7 @@ class AppConfig:
     """Application configuration constants"""
     APP_TITLE = "Python Interactive Textbook"
     APP_ICON = "📚"
-    VERSION = "2.1.0"
+    VERSION = "2.2.0"
     MAX_CODE_EXECUTION_TIME = 5  # seconds
     MAX_CODE_LENGTH = 2000  # characters
     SESSION_TIMEOUT = 3600  # seconds
@@ -1121,7 +1121,7 @@ class SessionManager:
             'code_outputs': {},
             'quiz_attempts': {},
             'ui_preferences': {
-                'theme': 'light',
+                'theme': 'dark',
                 'font_size': 'medium'
             }
         }
@@ -1161,82 +1161,147 @@ class UIComponents:
         return """
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Source+Code+Pro:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap');
-
+            
             :root {
-                --primary-color: #4CAF50; /* A more vibrant, modern green */
-                --secondary-color: #81C784; /* A lighter, complementary green */
-                --accent-color: #FFC107; /* Amber for accents and highlights */
-                --background-light: #FFFFFF;
-                --background-dark: #121212;
-                --text-primary-light: #212121;
-                --text-primary-dark: #E0E0E0;
-                --text-secondary-light: #757575;
-                --text-secondary-dark: #BDBDBD;
-                --border-color-light: #E0E0E0;
-                --border-color-dark: #424242;
-                --shadow-light: 0 4px 6px rgba(0,0,0,0.1);
-                --shadow-medium: 0 5px 15px rgba(0,0,0,0.1);
+                --primary-color: #d4af37;
+                --secondary-color: #ffd700;
+                --accent-color: #ff6b6b;
+                --background-light: #1a1a1a;
+                --background-dark: #0d1117;
+                --text-primary: #e6e6e6;
+                --text-secondary: #b3b3b3;
+                --border-color: #404040;
+                --shadow-light: 0 2px 10px rgba(0,0,0,0.3);
+                --shadow-medium: 0 5px 20px rgba(0,0,0,0.4);
+                --shadow-heavy: 0 10px 30px rgba(0,0,0,0.5);
             }
-
+            
             .stApp {
-                background-color: var(--background-light);
-                color: var(--text-primary-light);
+                background: linear-gradient(135deg, var(--background-dark) 0%, var(--background-light) 100%);
+                background-attachment: fixed;
+                color: var(--text-primary);
             }
-
+            
             .main-container {
                 background: var(--background-light);
-                border: 1px solid var(--border-color-light);
-                border-radius: 16px;
+                border: 2px solid var(--secondary-color);
+                border-radius: 20px;
                 padding: 2.5rem;
                 margin: 1.5rem auto;
                 max-width: 900px;
-                box-shadow: var(--shadow-medium);
+                box-shadow: var(--shadow-heavy);
+                position: relative;
                 font-family: 'Crimson Text', serif;
-                line-height: 1.7;
+                line-height: 1.6;
+                color: var(--text-primary);
             }
-
+            
+            .main-container::before {
+                content: '';
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                bottom: 10px;
+                border: 1px solid var(--border-color);
+                border-radius: 15px;
+                pointer-events: none;
+            }
+            
             .cover-page {
                 text-align: center;
-                padding: 3rem 2rem;
-                background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-                color: white;
-                border-radius: 16px;
-                margin-bottom: 2rem;
+                padding: 4rem 2rem;
+                background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #333333 100%);
+                color: var(--secondary-color);
+                border-radius: 20px;
+                margin: -2.5rem -2.5rem 2rem -2.5rem;
+                position: relative;
+                overflow: hidden;
             }
-
+            
+            .cover-page::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: radial-gradient(circle at 30% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+                pointer-events: none;
+            }
+            
             .cover-title {
-                font-size: clamp(2.5rem, 5vw, 3.5rem);
+                font-size: clamp(2.5rem, 5vw, 4rem);
                 font-weight: 600;
-                margin-bottom: 1rem;
-                text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-                font-family: 'Inter', sans-serif;
-            }
-
-            .chapter-header {
-                color: var(--primary-color);
-                font-size: 2.2rem;
                 margin-bottom: 1.5rem;
-                padding-bottom: 0.5rem;
-                border-bottom: 3px solid var(--primary-color);
-                font-family: 'Inter', sans-serif;
+                text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+                font-family: 'Crimson Text', serif;
+                position: relative;
+                z-index: 1;
             }
-
+            
+            .cover-subtitle {
+                font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+                margin-bottom: 2rem;
+                opacity: 0.95;
+                font-style: italic;
+                position: relative;
+                z-index: 1;
+            }
+            
+            .chapter-header {
+                color: var(--secondary-color);
+                font-size: 2.2rem;
+                font-weight: 600;
+                margin-bottom: 2rem;
+                padding-bottom: 1rem;
+                border-bottom: 3px solid var(--secondary-color);
+                font-family: 'Crimson Text', serif;
+                position: relative;
+            }
+            
+            .chapter-header::after {
+                content: '';
+                position: absolute;
+                bottom: -3px;
+                left: 0;
+                width: 60px;
+                height: 3px;
+                background: var(--accent-color);
+            }
+            
             .page-content {
-                font-size: 1.1rem;
-                color: var(--text-primary-light);
+                font-size: 1.15rem;
+                line-height: 1.8;
+                color: var(--text-primary);
                 text-align: justify;
                 margin-bottom: 2rem;
+                font-family: 'Crimson Text', serif;
             }
-
+            
             .code-section, .interactive-section, .quiz-container {
-                border: 1px solid var(--border-color-light);
                 border-radius: 12px;
                 padding: 1.5rem;
                 margin: 2rem 0;
                 position: relative;
-                background-color: #F9F9F9;
+                box-shadow: var(--shadow-medium);
+            }
+
+            .code-section {
+                background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+                border: 1px solid var(--border-color);
             }
             
+            .interactive-section {
+                background: #252525;
+                border: 1px solid var(--border-color);
+            }
+
+            .quiz-container {
+                background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+                border: 1px solid var(--secondary-color);
+            }
+
             .code-section::before, .interactive-section::before, .quiz-container::before {
                 position: absolute;
                 top: -14px;
@@ -1246,49 +1311,51 @@ class UIComponents:
                 font-size: 0.85rem;
                 font-weight: 600;
                 font-family: 'Inter', sans-serif;
-                color: white;
+                color: var(--background-dark);
             }
 
-            .code-section::before { content: '💻 Code Example'; background-color: #2196F3; }
-            .interactive-section::before { content: '🚀 Interactive Code'; background-color: var(--primary-color); }
-            .quiz-container::before { content: '🎯 Knowledge Check'; background-color: var(--accent-color); color: #212121;}
-
+            .code-section::before { content: '💻 Code Example'; background-color: var(--secondary-color); }
+            .interactive-section::before { content: '🚀 Interactive Code'; background-color: var(--secondary-color); }
+            .quiz-container::before { content: '🎯 Knowledge Check'; background-color: var(--secondary-color); }
+            
             .quiz-question {
-                color: var(--text-primary-light);
+                color: var(--text-primary);
                 font-size: 1.2rem;
                 font-weight: 600;
                 margin-bottom: 1rem;
             }
-
+            
             .toc-item {
-                border: 1px solid var(--border-color-light);
+                background: linear-gradient(135deg, var(--background-light) 0%, #2a2a2a 100%);
+                border: 1px solid var(--border-color);
                 border-radius: 12px;
                 padding: 1rem 1.5rem;
                 margin: 0.75rem 0;
                 cursor: pointer;
                 transition: all 0.2s ease-in-out;
+                color: var(--text-primary);
             }
 
             .toc-item:hover {
                 transform: translateY(-2px);
-                box-shadow: var(--shadow-light);
+                box-shadow: var(--shadow-medium);
                 border-color: var(--primary-color);
             }
             
             .locked-chapter {
-                opacity: 0.6;
+                opacity: 0.5;
                 pointer-events: none;
-                background-color: #FAFAFA;
+                background: #101010;
             }
 
             .completed-chapter {
-                background-color: #E8F5E9; /* Light green background */
-                border-color: var(--primary-color);
+                background: linear-gradient(135deg, #2E4031 0%, #1a2b1f 100%);
+                border-color: #38761d;
             }
             
             .page-number {
                 text-align: right;
-                color: var(--text-secondary-light);
+                color: var(--text-secondary);
                 font-style: italic;
                 font-size: 0.9rem;
                 margin-top: 2rem;
@@ -1299,9 +1366,16 @@ class UIComponents:
     @staticmethod
     def render_progress_bar(progress_percentage: float, show_text: bool = True) -> None:
         """Render a progress bar"""
-        if show_text:
-            st.markdown(f'<h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">📊 Your Progress: {progress_percentage:.1f}%</h3>', unsafe_allow_html=True)
-        st.progress(progress_percentage / 100)
+        progress_html = f"""
+        <div style="margin: 1.5rem 0;">
+            {f'<h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">📊 Your Progress: {progress_percentage:.1f}%</h3>' if show_text else ''}
+            <div style="background: #333; border-radius: 10px; height: 20px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);">
+                <div style="background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%); width: {progress_percentage}%; height: 100%; transition: width 0.8s ease;"></div>
+            </div>
+        </div>
+        """
+        st.markdown(progress_html, unsafe_allow_html=True)
+
 
     @staticmethod
     def render_chapter_status(chapter_index: int, chapter: ChapterData, is_completed: bool, is_current: bool, is_locked: bool) -> None:
@@ -1322,7 +1396,7 @@ class UIComponents:
                 st.markdown(f'<div style="font-size: 1.5rem; text-align: center; margin-top: 10px;">{status_icon}</div>', unsafe_allow_html=True)
             with col2:
                 st.markdown(f"**{chapter.title}**")
-                st.markdown(f"<small style='color: var(--text-secondary-light);'><i>{status_text} | ⏱️ Est. {chapter.estimated_time} min</i></small>", unsafe_allow_html=True)
+                st.markdown(f"<small style='color: var(--text-secondary);'><i>{status_text} | ⏱️ Est. {chapter.estimated_time} min</i></small>", unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
 
@@ -1336,21 +1410,29 @@ class CoverPageController:
         """Render the cover page"""
         st.markdown(UIComponents.load_css(), unsafe_allow_html=True)
 
-        st.markdown(
-            """
-            <div class="main-container">
-                <div class="cover-page">
-                    <h1 class="cover-title">📚 Python Interactive Textbook</h1>
-                    <p>A Magical Journey from Beginner to Pythonista</p>
+        cover_html = f"""
+        <div class="main-container">
+            <div class="cover-page">
+                <h1 class="cover-title">📚 Python Interactive Textbook</h1>
+                <p class="cover-subtitle">A Magical Journey from Beginner to Pythonista</p>
+                 <div style="font-size: 1.15rem; margin: 2rem 0; line-height: 1.6;">
+                    <p>Welcome to an extraordinary learning experience that transforms the way you discover Python programming.</p>
+                    <p>This isn't just another tutorial—it's your personal guide through the world of code, complete with:</p>
+                    <ul style="text-align: left; max-width: 500px; margin: 1.5rem auto; list-style-type: '✨ '; padding-left: 20px;">
+                        <li>Interactive chapters that adapt to your pace</li>
+                        <li>Live code execution and experimentation</li>
+                        <li>Smart quizzes that reinforce learning</li>
+                        <li>Progress tracking and achievements</li>
+                        <li>Automatic bookmarking of your journey</li>
+                    </ul>
                 </div>
-                <p class="page-content">
-                    Welcome to an extraordinary learning experience that transforms the way you discover Python programming.
-                    This isn't just another tutorial—it's your personal guide through the world of code, complete with interactive chapters, live code execution, and smart quizzes to track your progress.
+                <p style="font-size: 1rem; opacity: 0.8; margin-top: 2rem;">
+                    Version {AppConfig.VERSION} | Crafted for curious minds
                 </p>
             </div>
-            """,
-            unsafe_allow_html=True
-        )
+        </div>
+        """
+        st.markdown(cover_html, unsafe_allow_html=True)
 
         if st.button("🚀 Begin Your Journey", key="start_journey", use_container_width=True, type="primary"):
             logger.info("User started their learning journey")
@@ -1449,7 +1531,7 @@ class ChapterController:
     def _render_interactive_section(chapter: ChapterData, chapter_index: int):
         """Render interactive code section"""
         st.markdown('<div class="interactive-section">', unsafe_allow_html=True)
-        st.markdown("**Modify the code below and click 'Run' to see the results:**")
+        st.markdown("<strong style='color: var(--text-primary);'>Modify the code below and click 'Run' to see the results:</strong>", unsafe_allow_html=True)
 
         user_code = st.text_area(
             "Python Code:",
