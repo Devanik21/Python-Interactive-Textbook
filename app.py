@@ -198,55 +198,663 @@ Understanding data types isn't just academic—different types have different ca
                 code_example='''# Variables: labeled containers for your data
 name = "Alice"              # String - text data
 age = 25                    # Integer - whole numbers
-height = 5.6                # Float - decimal numbers
-is_student = True           # Boolean - True or False
-account_balance = 1250.75   # Float - money is often decimal
+height = 5.9               # Float - decimal numbers
+is_student = True          # Boolean - True/False
 
-# Variables can change (that's why they're called "variable"!)
-age = 26  # Alice had a birthday!
+# Type checking
+type(name)      # <class 'str'>
+type(age)       # <class 'int'>
+type(height)    # <class 'float'>
+type(is_student) # <class 'bool'>
 
-# Python is smart about types
-print(f"Name: {name} (type: {type(name).__name__})")
-print(f"Age: {age} (type: {type(age).__name__})")
-print(f"Height: {height} (type: {type(height).__name__})")
-print(f"Student: {is_student} (type: {type(is_student).__name__})")
-
-# Interesting fact: Python integers can be arbitrarily large!
-big_number = 12345678901234567890
-print(f"Big number: {big_number}")
-''',
-                interactive_code='# Create your own variables!\nfavorite_color = "blue"\nlucky_number = 7\nprint(f"My favorite color is {favorite_color}")\nprint(f"My lucky number is {lucky_number}")',
+# Type conversion
+str_age = str(age)         # Convert to string
+int_height = int(height)   # Convert to integer (truncates decimal)
+float_age = float(age)     # Convert to float''',
+                interactive_code='# Try creating your own variables here!\n# 1. Create a variable for your name\n# 2. Create a variable for your age\n# 3. Create a boolean variable for whether you like Python\n# 4. Print them all out',
                 quiz=QuizData(
-                    question="Which of these creates a string variable in Python?",
+                    question="Which of these is NOT a valid Python variable name?",
                     options=[
-                        'message = "Hello World"',
-                        'message = Hello World',
-                        'string message = "Hello World"',
-                        'message = (Hello World)'
+                        "my_variable",
+                        "2nd_place",
+                        "_private_var",
+                        "camelCaseVar"
                     ],
-                    correct_index=0,
-                    explanation="Strings in Python must be enclosed in quotes (single or double). Python doesn't require type declarations.",
+                    correct_index=1,
+                    explanation="Variable names cannot start with a number in Python. They must start with a letter or underscore.",
                     difficulty="beginner"
                 ),
-                prerequisites=["python_intro"],
-                keywords=["variables", "data types", "strings", "integers", "floats", "booleans"]
+                keywords=["variables", "data types", "integers", "floats", "strings", "booleans"]
             ),
             
             ChapterData(
-                id="operations",
-                title="Chapter 3: Operations and Expressions",
+                id="operators_expressions",
+                title="Chapter 3: Operators & Expressions",
                 content="""
-Operations in Python go far beyond basic arithmetic—they're the building blocks for complex logic and data manipulation. Understanding operations deeply will make you a more effective programmer.
+Operators are the building blocks of Python programs, allowing you to perform operations on variables and values. Python provides a rich set of operators that make it easy to work with different types of data.
 
-**Arithmetic operations** follow mathematical conventions with some programming-specific additions. The modulo operator (%) finds remainders and is surprisingly useful for checking if numbers are even/odd, creating cycles, and time calculations. The exponentiation operator (**) handles powers elegantly.
+**Arithmetic operators** (+, -, *, /, //, %, **) let you perform mathematical calculations. **Comparison operators** (==, !=, >, <, >=, <=) compare values and return boolean results. **Logical operators** (and, or, not) combine boolean values in logical expressions. **Assignment operators** (=, +=, -=, etc.) assign values to variables.
 
-**String operations** reveal Python's elegance. Concatenation joins strings, repetition creates patterns, and formatting creates dynamic text. Modern Python uses f-strings for readable, efficient string formatting.
+Expressions are combinations of values, variables, operators, and function calls that evaluate to a single value. Understanding operator precedence is crucial for writing correct expressions—Python follows the standard order of operations (PEMDAS/BODMAS).
 
-**Comparison operations** return boolean values and are essential for decision-making. They work with different data types, following intuitive rules most of the time.
+Python also supports membership operators (in, not in) and identity operators (is, is not) that are particularly useful when working with collections and object comparison.
+                """,
+                code_example='''# Arithmetic operators
+x = 10 + 5   # Addition: 15
+y = 10 - 5   # Subtraction: 5
+z = 10 * 5   # Multiplication: 50
+w = 10 / 3   # Division: 3.333...
+q = 10 // 3  # Floor division: 3
+r = 10 % 3   # Modulus: 1
+p = 2 ** 3   # Exponentiation: 8
 
-**Operator precedence** determines the order of operations, just like in mathematics. Parentheses can override precedence, making your intentions clear to both Python and human readers.
+# Comparison operators
+print(10 > 5)   # True
+print(10 == 10) # True
+print(10 != 5)  # True
 
-Understanding these operations thoroughly will help you write more expressive and efficient code.
+# Logical operators
+print(True and False)  # False
+print(True or False)   # True
+print(not True)        # False
+
+# Membership operators
+name = "Python"
+print("y" in name)    # True
+print("z" not in name) # True
+
+# Identity operators
+a = [1, 2, 3]
+b = a
+c = [1, 2, 3]
+print(a is b)     # True (same object)
+print(a is c)     # False (different objects with same value)
+print(a == c)     # True (same value)''',
+                interactive_code='''# Try these expressions:
+# 1. Calculate 2 to the power of 10
+# 2. Check if 15 is between 10 and 20
+# 3. Create two variables with the same value but different identity
+# 4. Use string operations to check if your name contains a specific letter
+
+# Your code here''',
+                quiz=QuizData(
+                    question="What is the result of: 2 + 3 * 4 ** 2",
+                    options=[
+                        "80",
+                        "100",
+                        "50",
+                        "32"
+                    ],
+                    correct_index=2,
+                    explanation="The expression follows operator precedence: ** has highest precedence, then *, then +. So it's 2 + (3 * (4 ** 2)) = 2 + (3 * 16) = 2 + 48 = 50.",
+                    difficulty="beginner"
+                ),
+                keywords=["operators", "expressions", "arithmetic", "comparison", "logical", "precedence"]
+            ),
+            
+            ChapterData(
+                id="control_flow",
+                title="Chapter 4: Control Flow",
+                content="""
+Control flow determines the order in which your code executes. Python provides several control structures to manage this flow, making your programs more powerful and flexible.
+
+**Conditional statements** (if, elif, else) allow your program to make decisions and execute different code blocks based on conditions. **Loops** (for, while) enable you to execute a block of code multiple times, which is essential for processing collections of data or repeating operations.
+
+Python's control flow is controlled by indentation, which makes the code more readable and enforces good formatting practices. You can also use control flow statements like break, continue, and pass to fine-tune loop behavior.
+
+Understanding control flow is crucial for writing programs that can handle different scenarios and process data efficiently.
+                """,
+                code_example='''# If-elif-else statement
+temperature = 25
+if temperature > 30:
+    print("It's a hot day!")
+elif temperature > 20:
+    print("It's a nice day!")
+else:
+    print("It's a bit chilly!")
+
+# For loop with range
+print("\nCounting to 5:")
+for i in range(1, 6):
+    print(i)
+
+# While loop
+print("\nCountdown:")
+count = 5
+while count > 0:
+    print(count)
+    count -= 1
+
+# Break and continue
+print("\nOdd numbers up to 10:")
+for num in range(1, 11):
+    if num % 2 == 0:
+        continue  # Skip even numbers
+    if num > 7:
+        break     # Exit loop if number > 7
+    print(num)
+
+# Nested loops
+print("\nMultiplication table:")
+for i in range(1, 6):
+    for j in range(1, 6):
+        print(f"{i*j:2}", end=" ")
+    print()  # New line after each row''',
+                interactive_code='''# Try these exercises:
+# 1. Write an if-elif-else statement that checks a number's sign
+# 2. Create a for loop that prints even numbers from 0 to 10
+# 3. Use a while loop to count down from 5 to 1
+# 4. Write a loop that skips numbers divisible by 3
+
+# Your code here''',
+                quiz=QuizData(
+                    question="What does the 'continue' statement do in a loop?",
+                    options=[
+                        "Stops the entire program",
+                        "Skips the rest of the current iteration and continues with the next one",
+                        "Exits the loop completely",
+                        "Starts the loop over from the beginning"
+                    ],
+                    correct_index=1,
+                    explanation="The 'continue' statement skips the rest of the current iteration and moves to the next iteration of the loop.",
+                    difficulty="beginner"
+                ),
+                keywords=["control flow", "if statements", "loops", "for", "while", "break", "continue"]
+            ),
+            
+            ChapterData(
+                id="functions",
+                title="Chapter 5: Functions",
+                content="""
+Functions are reusable blocks of code that perform a specific task. They help break down complex problems into smaller, more manageable pieces, making your code more organized, readable, and maintainable.
+
+In Python, you define a function using the 'def' keyword, followed by the function name and parentheses containing any parameters. The function body is indented and can include a 'return' statement to send a value back to the caller.
+
+Functions can take parameters (required, default, keyword, or variable-length) and return values. Python functions are first-class objects, meaning they can be passed as arguments, returned from other functions, and assigned to variables.
+
+Understanding scope is crucial when working with functions—variables defined inside a function are local to that function, while those defined outside are global. The 'global' keyword allows you to modify global variables from within a function.
+                """,
+                code_example='''# Basic function
+def greet(name):
+    return f"Hello, {name}!"
+
+# Function with default parameter
+def power(base, exponent=2):
+    """Raise base to the power of exponent."""
+    return base ** exponent
+
+# Variable number of arguments
+def average(*numbers):
+    return sum(numbers) / len(numbers) if numbers else 0
+
+# Function with keyword arguments
+def create_person(name, age, **kwargs):
+    person = {"name": name, "age": age}
+    person.update(kwargs)
+    return person
+
+# Lambda function (anonymous function)
+add = lambda x, y: x + y
+
+# Using the functions
+print(greet("Alice"))  # Hello, Alice!
+print(power(3))        # 9 (uses default exponent)
+print(power(2, 3))     # 8
+print(average(1, 2, 3, 4, 5))  # 3.0
+print(create_person("Bob", 30, city="New York", occupation="Developer"))
+print(add(5, 3))  # 8''',
+                interactive_code='''# Try these exercises:
+# 1. Write a function that checks if a number is even
+# 2. Create a function that returns the maximum of three numbers
+# 3. Write a function that calculates the factorial of a number
+# 4. Create a lambda function that multiplies two numbers
+
+def is_even(num):
+    # Your code here
+    pass
+
+def max_of_three(a, b, c):
+    # Your code here
+    pass
+
+# Your code here''',
+                quiz=QuizData(
+                    question="What is the output of: print((lambda x: x**2)(5))",
+                    options=[
+                        "25",
+                        "10",
+                        "55",
+                        "Error"
+                    ],
+                    correct_index=0,
+                    explanation="This is a lambda function that takes x and returns x squared. When called with 5, it returns 5**2 which is 25.",
+                    difficulty="intermediate"
+                ),
+                keywords=["functions", "parameters", "return values", "lambda", "scope"]
+            ),
+            
+            ChapterData(
+                id="data_structures",
+                title="Chapter 6: Data Structures",
+                content="""
+Python provides several built-in data structures that are optimized for different use cases. Understanding these data structures and when to use them is crucial for writing efficient Python code.
+
+**Lists** are ordered, mutable collections that can contain elements of different types. They are defined using square brackets [] and are ideal for ordered collections that need to be modified.
+
+**Tuples** are similar to lists but are immutable (cannot be changed after creation). They are defined using parentheses () and are often used for fixed collections of related items.
+
+**Dictionaries** are key-value pairs that allow for fast lookups. They are defined using curly braces {} and are ideal for storing and retrieving data using unique keys.
+
+**Sets** are unordered collections of unique elements. They are defined using curly braces {} or the set() function and are useful for membership testing and eliminating duplicate entries.
+
+Each data structure has its own methods and operations that make certain tasks more efficient. Choosing the right data structure can significantly impact the performance and readability of your code.
+                """,
+                code_example='''# Lists (ordered, mutable)
+fruits = ["apple", "banana", "cherry"]
+fruits.append("date")  # Add item
+print(fruits[1])       # Access by index: "banana"
+
+# Tuples (ordered, immutable)
+coordinates = (10, 20)
+x, y = coordinates     # Unpacking
+print(f"X: {x}, Y: {y}")
+
+# Dictionaries (key-value pairs)
+person = {
+    "name": "Alice",
+    "age": 30,
+    "city": "New York"
+}
+print(person["name"])  # Access by key: "Alice"
+
+# Sets (unordered, unique elements)
+primes = {2, 3, 5, 7, 11}
+primes.add(13)         # Add element
+print(5 in primes)     # Membership test: True
+
+# List comprehension (create lists concisely)
+squares = [x**2 for x in range(10)]
+print(squares)  # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+
+# Dictionary comprehension
+square_dict = {x: x**2 for x in range(5)}
+print(square_dict)  # {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}''',
+                interactive_code='''# Try these exercises:
+# 1. Create a list of your favorite colors and add a new color
+# 2. Create a tuple representing a point in 3D space
+# 3. Create a dictionary with information about your favorite book
+# 4. Create a set of vowels and check if a letter is a vowel
+
+# Your code here''',
+                quiz=QuizData(
+                    question="Which of these data structures does NOT allow duplicate elements?",
+                    options=[
+                        "List",
+                        "Tuple",
+                        "Set",
+                        "Dictionary keys"
+                    ],
+                    correct_index=2,
+                    explanation="Sets automatically remove duplicate elements. While dictionary keys must be unique, the question specifically refers to the data structure itself, and sets are designed to store only unique elements.",
+                    difficulty="beginner"
+                ),
+                keywords=["lists", "tuples", "dictionaries", "sets", "data structures", "collections"]
+            ),
+            
+            ChapterData(
+                id="strings_regex",
+                title="Chapter 7: Strings & Regular Expressions",
+                content="""
+Strings are one of the most commonly used data types in Python, used to represent text. Python provides a rich set of string operations and methods that make text processing straightforward and efficient.
+
+String formatting allows you to create dynamic strings by embedding variables and expressions. Python offers several ways to format strings, including f-strings (formatted string literals), the .format() method, and the older %-formatting.
+
+Regular expressions (regex) are a powerful tool for pattern matching and text manipulation. Python's 're' module provides functions to work with regular expressions, allowing you to search, extract, and manipulate text based on patterns.
+
+Understanding string methods and regular expressions is essential for tasks like data cleaning, input validation, and text processing.
+                """,
+                code_example='''# String basics
+greeting = "Hello, World!"
+print(len(greeting))        # 13
+print(greeting.upper())     # "HELLO, WORLD!"
+print(greeting.lower())     # "hello, world!"
+print(greeting.split(","))  # ['Hello', ' World!']
+
+# String formatting
+name = "Alice"
+age = 30
+# f-strings (Python 3.6+)
+print(f"My name is {name} and I'm {age} years old.")
+# .format() method
+print("My name is {} and I'm {} years old.".format(name, age))
+# Old-style % formatting
+print("My name is %s and I'm %d years old." % (name, age))
+
+# Regular expressions
+import re
+
+# Search for a pattern
+pattern = r"\d{3}-\d{3}-\d{4}"  # Phone number pattern
+text = "My phone number is 123-456-7890"
+match = re.search(pattern, text)
+if match:
+    print(f"Found phone number: {match.group()}")
+
+# Find all matches
+emails = "Contact us at: support@example.com, sales@example.org"
+email_pattern = r"[\w\.-]+@[\w\.-]+\.\w+"
+matches = re.findall(email_pattern, emails)
+print(f"Found emails: {matches}")
+
+# String manipulation with regex
+# Replace all digits with #
+hidden = re.sub(r"\d", "#", "My number is 123-456-7890")
+print(hidden)  # "My number is ###-###-####"
+
+# Splitting strings with regex
+words = re.split(r"\W+", "Hello, world! This is a test.")
+print(words)  # ['Hello', 'world', 'This', 'is', 'a', 'test', '']''',
+                interactive_code='''# Try these exercises:
+# 1. Create a string with your name and convert it to uppercase
+# 2. Use f-strings to create a sentence with variables
+# 3. Write a regex pattern to find all words starting with 'a'
+# 4. Extract all numbers from a string using regex
+
+import re
+
+# Your code here''',
+                quiz=QuizData(
+                    question="Which regex pattern matches an email address?",
+                    options=[
+                        r"\w+@\w+",
+                        r"[\w\.-]+@[\w\.-]+\.\w+",
+                        r"email@domain.com",
+                        r".*@.*"
+                    ],
+                    correct_index=1,
+                    explanation="The pattern [\w\.-]+@[\w\.-]+\.\w+ matches most common email formats by allowing word characters, dots, and hyphens in both local and domain parts, followed by a dot and more word characters for the TLD.",
+                    difficulty="intermediate"
+                ),
+                keywords=["strings", "regular expressions", "regex", "string formatting", "text processing"]
+            ),
+            
+            ChapterData(
+                id="modules_packages",
+                title="Chapter 8: Modules & Packages",
+                content="""
+Modules and packages are fundamental to organizing Python code into logical, reusable components. A module is a single Python file containing functions, classes, and variables, while a package is a collection of modules in a directory hierarchy.
+
+Python's standard library includes a wide range of modules that provide ready-to-use functionality for common tasks. You can also create your own modules and packages to organize your code better and promote code reuse.
+
+The 'import' statement is used to bring modules into your program. You can import entire modules, specific attributes from modules, or use aliases for convenience. Understanding how Python's import system works is crucial for managing dependencies and creating maintainable code.
+
+Virtual environments and package managers like pip are essential tools for managing project dependencies and ensuring consistent development environments across different machines.
+                """,
+                code_example='''# Importing modules
+import math
+from datetime import datetime
+import os.path as path
+from collections import Counter
+
+# Using imported modules
+print(math.sqrt(16))  # 4.0
+print(datetime.now())  # Current date and time
+print(path.join('folder', 'file.txt'))  # Platform-independent path
+
+# Creating your own module
+# Save this as mymodule.py
+"""
+# mymodule.py
+def greet(name):
+    return f"Hello, {name}!"
+
+PI = 3.14159
+"""
+
+# Then in another file:
+# import mymodule
+# print(mymodule.greet("Alice"))
+# print(mymodule.PI)
+
+# Creating a package
+# mypackage/
+#     __init__.py
+#     module1.py
+#     module2.py
+#     subpackage/
+#         __init__.py
+#         module3.py
+
+# Using __name__
+if __name__ == "__main__":
+    print("This runs when the script is executed directly")
+else:
+    print("This runs when the module is imported")
+
+# Installing packages with pip
+# In terminal: pip install requests
+# Then in your code:
+# import requests
+# response = requests.get("https://api.example.com")
+# print(response.json())''',
+                interactive_code='''# Try these exercises:
+# 1. Import the 'random' module and generate a random number
+# 2. Create a simple module with a function and import it
+# 3. Use the 'os' module to get the current working directory
+# 4. Install a package using pip and import it
+
+# Your code here''',
+                quiz=QuizData(
+                    question="What is the purpose of the __init__.py file in a Python package?",
+                    options=[
+                        "It initializes the Python interpreter",
+                        "It marks the directory as a Python package",
+                        "It contains package documentation",
+                        "It's required for running the package"
+                    ],
+                    correct_index=1,
+                    explanation="The __init__.py file marks the directory as a Python package directory. It can be empty but is required to make Python treat the directory as containing a package.",
+                    difficulty="intermediate"
+                ),
+                keywords=["modules", "packages", "import", "python path", "__init__.py"]
+            ),
+            
+            ChapterData(
+                id="file_handling",
+                title="Chapter 9: File Handling",
+                content="""
+File handling is a crucial aspect of programming, allowing you to read from and write to files on your computer. Python provides built-in functions and methods to work with files in a simple and efficient way.
+
+Files can be opened in different modes: read ('r'), write ('w'), append ('a'), and binary ('b'). It's important to always close files after you're done with them, which can be done manually or automatically using the 'with' statement (context manager).
+
+Python supports working with different file formats, including text files, CSV, JSON, and binary files. The 'os' and 'pathlib' modules provide cross-platform tools for file and directory operations.
+
+Understanding file handling is essential for tasks like data processing, configuration management, and data persistence in your applications.
+                """,
+                code_example='''# Reading from a file
+with open('example.txt', 'r') as file:
+    content = file.read()  # Read entire file
+    print(content)
+
+# Reading line by line
+with open('example.txt', 'r') as file:
+    for line in file:
+        print(line.strip())  # strip() removes trailing newline
+
+# Writing to a file
+with open('output.txt', 'w') as file:
+    file.write("Hello, World!\n")
+    file.write("This is a new line.")
+
+# Working with CSV files
+import csv
+
+# Writing to CSV
+with open('data.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(["Name", "Age", "City"])
+    writer.writerow(["Alice", 30, "New York"])
+    writer.writerow(["Bob", 25, "Los Angeles"])
+
+# Reading from CSV
+with open('data.csv', 'r') as file:
+    reader = csv.reader(file)
+    for row in reader:
+        print(row)
+
+# Working with JSON
+import json
+
+# Writing JSON
+data = {
+    "name": "Alice",
+    "age": 30,
+    "city": "New York",
+    "languages": ["Python", "JavaScript", "SQL"]
+}
+
+with open('data.json', 'w') as file:
+    json.dump(data, file, indent=4)
+
+# Reading JSON
+with open('data.json', 'r') as file:
+    loaded_data = json.load(file)
+    print(loaded_data["name"])  # Alice
+
+# Using pathlib for path manipulation
+from pathlib import Path
+
+current_dir = Path.cwd()
+file_path = current_dir / 'data' / 'example.txt'
+print(f"File exists: {file_path.exists()}")
+print(f"File extension: {file_path.suffix}")
+print(f"Parent directory: {file_path.parent}")''',
+                interactive_code='''# Try these exercises:
+# 1. Create a new text file and write some content to it
+# 2. Read the file you just created and print its contents
+# 3. Create a CSV file with some data and read it back
+# 4. Use pathlib to check if a file exists and get its size
+
+# Your code here''',
+                quiz=QuizData(
+                    question="What is the advantage of using the 'with' statement when working with files?",
+                    options=[
+                        "It automatically closes the file when the block is exited",
+                        "It makes file operations faster",
+                        "It allows reading and writing simultaneously",
+                        "It's required for binary file operations"
+                    ],
+                    correct_index=0,
+                    explanation="The 'with' statement ensures that the file is properly closed after its suite finishes, even if an exception is raised. This is a more pythonic and safer way to handle files.",
+                    difficulty="beginner"
+                ),
+                keywords=["file handling", "reading files", "writing files", "csv", "json", "pathlib"]
+            ),
+            
+            ChapterData(
+                id="error_handling",
+                title="Chapter 10: Error Handling & Exceptions",
+                content="""
+Error handling is a critical aspect of writing robust Python applications. Python uses exceptions to handle errors that occur during program execution. When an error occurs, Python generates an exception that can be caught and handled, preventing the program from crashing.
+
+Python provides several built-in exceptions like ValueError, TypeError, FileNotFoundError, and more. You can also define your own custom exceptions by creating a new class that inherits from the Exception class.
+
+The try-except block is used to catch and handle exceptions. You can have multiple except blocks to handle different types of exceptions, and you can use the 'else' clause to run code when no exceptions occur. The 'finally' block is used for cleanup code that should run whether an exception occurred or not.
+
+Proper error handling makes your code more robust and user-friendly by providing meaningful error messages and gracefully handling unexpected situations.
+                """,
+                code_example='''# Basic try-except block
+try:
+    result = 10 / 0  # This will raise a ZeroDivisionError
+except ZeroDivisionError:
+    print("Cannot divide by zero!")
+
+# Handling multiple exceptions
+try:
+    number = int(input("Enter a number: "))
+    result = 100 / number
+except ValueError:
+    print("Please enter a valid number!")
+except ZeroDivisionError:
+    print("Cannot divide by zero!")
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
+else:
+    print(f"Result: {result}")
+finally:
+    print("This will always execute")
+
+# Raising exceptions
+def validate_age(age):
+    if age < 0:
+        raise ValueError("Age cannot be negative")
+    if age < 18:
+        raise ValueError("Must be at least 18 years old")
+    return True
+
+try:
+    validate_age(-5)
+except ValueError as e:
+    print(f"Validation error: {e}")
+
+# Custom exceptions
+class InvalidEmailError(Exception):
+    """Raised when the email format is invalid"""
+    pass
+
+def validate_email(email):
+    if "@" not in email or "." not in email:
+        raise InvalidEmailError("Invalid email format")
+    return True
+
+try:
+    validate_email("invalid-email")
+except InvalidEmailError as e:
+    print(f"Email validation failed: {e}")
+
+# Using assert for debugging
+def calculate_average(numbers):
+    assert len(numbers) > 0, "List cannot be empty"
+    return sum(numbers) / len(numbers)
+
+# This will raise an AssertionError if the list is empty
+# calculate_average([])  # Uncomment to see the error''',
+                interactive_code='''# Try these exercises:
+# 1. Write a function that divides two numbers with proper error handling
+# 2. Create a custom exception for a specific error case
+# 3. Use try-except to handle file operations
+# 4. Write a function that validates user input with proper error messages
+
+def safe_divide(a, b):
+    # Your code here
+    pass
+
+# Your code here''',
+                quiz=QuizData(
+                    question="What is the purpose of the 'finally' clause in a try-except block?",
+                    options=[
+                        "It runs only if no exceptions were raised",
+                        "It runs only if an exception was raised",
+                        "It always runs, regardless of whether an exception occurred",
+                        "It's used to define custom exceptions"
+                    ],
+                    correct_index=2,
+                    explanation="The 'finally' clause is used to define cleanup code that must be executed under all circumstances, whether an exception was raised or not. It's commonly used for releasing external resources like files or network connections.",
+                    difficulty="intermediate"
+                ),
+                keywords=["error handling", "exceptions", "try-except", "raise", "custom exceptions"]
+            ),
+            
+            ChapterData(
+                id="oop",
+                title="Chapter 11: Object-Oriented Programming in Python",
+                content="""Object-Oriented Programming (OOP) is a programming paradigm that uses objects and classes to structure software. Python is an object-oriented language that supports all four pillars of OOP: encapsulation, abstraction, inheritance, and polymorphism.
+
+A class is a blueprint for creating objects (instances), which bundle data (attributes) and functions (methods) that operate on that data. Classes can inherit attributes and methods from other classes, allowing for code reuse and the creation of hierarchical relationships.
+
+Python's implementation of OOP includes features like class and instance variables, instance methods, class methods, static methods, properties, and special methods (dunder methods) that allow operator overloading and other behaviors.
+
+Understanding OOP is essential for writing modular, maintainable, and scalable Python code, especially for larger applications and frameworks.
                 """,
                 code_example='''# Arithmetic operations - the foundation of computation
 x, y = 15, 4  # Multiple assignment - very Pythonic!
