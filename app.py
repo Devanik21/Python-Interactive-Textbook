@@ -5,7 +5,7 @@ A comprehensive, industry-level educational platform for learning Python program
 with interactive features, progress tracking, and book-like user experience.
 
 Author: AI Assistant
-Version: 2.2.0
+Version: 2.0.0
 License: MIT
 """
 
@@ -14,7 +14,6 @@ import json
 import time
 import sys
 import io
-import random
 import logging
 import traceback
 from contextlib import redirect_stdout, redirect_stderr
@@ -23,7 +22,6 @@ from dataclasses import dataclass, asdict
 from enum import Enum
 import hashlib
 from datetime import datetime
-import re
 
 
 # ==================== CONFIGURATION & CONSTANTS ====================
@@ -32,14 +30,14 @@ class AppConfig:
     """Application configuration constants"""
     APP_TITLE = "Python Interactive Textbook"
     APP_ICON = "📚"
-    VERSION = "2.2.0"
+    VERSION = "2.0.0"
     MAX_CODE_EXECUTION_TIME = 5  # seconds
-    MAX_CODE_LENGTH = 2000  # characters
+    MAX_CODE_LENGTH = 1000  # characters
     SESSION_TIMEOUT = 3600  # seconds
-
+    
     # UI Constants
     CONTAINER_MAX_WIDTH = 900
-    CODE_EDITOR_HEIGHT = 150
+    CODE_EDITOR_HEIGHT = 120
     QUIZ_TIMEOUT = 300  # seconds
 
 
@@ -134,16 +132,15 @@ logger = setup_logging()
 
 class ChapterRepository:
     """Repository for chapter data management"""
-
+    
     @staticmethod
     @st.cache_data(ttl=3600)
     def get_all_chapters() -> List[ChapterData]:
         """Get all chapter data with caching"""
         return [
-            # Chapter 1
             ChapterData(
                 id="python_intro",
-                title="Chapter 1: Introduction to Python",
+                title="Chapter 1: Welcome to Python",
                 content="""
 Welcome to the extraordinary world of Python programming! Python is more than just a programming language—it's your gateway to computational thinking and problem-solving.
 
@@ -162,779 +159,291 @@ print("Welcome to your Python journey!")
 
 # Let's make it personal
 print("🐍 Python is going to be your new favorite language!")
+
+# Fun fact: This simple program contains several important concepts:
+# - Function calls (print)
+# - String literals ("Hello, World!")
+# - Comments (these lines!)
 ''',
-                interactive_code='# Try changing this message!\nprint("Hello, Python!")',
+                interactive_code='# Try changing this message!\nprint("Hello, Python!")\nprint("My name is [Your Name]")',
                 quiz=QuizData(
                     question="Who created the Python programming language?",
-                    options=["Guido van Rossum", "Dennis Ritchie", "Bjarne Stroustrup", "James Gosling"],
+                    options=[
+                        "Guido van Rossum",
+                        "Dennis Ritchie", 
+                        "Bjarne Stroustrup",
+                        "James Gosling"
+                    ],
                     correct_index=0,
-                    explanation="Guido van Rossum created Python in 1991.",
+                    explanation="Guido van Rossum created Python in 1991 at Centrum Wiskunde & Informatica (CWI) in the Netherlands.",
                     difficulty="beginner"
                 ),
                 keywords=["python", "introduction", "history", "print", "comments"]
             ),
-            # Chapter 2
+            
             ChapterData(
                 id="variables_datatypes",
-                title="Chapter 2: Variables & Data Types",
+                title="Chapter 2: Variables and Data Types",
                 content="""
-Variables are the foundation of programming—think of them as labeled containers that store information. In Python, creating a variable is beautifully simple: just assign a value to a name. Python uses dynamic typing, meaning it automatically determines what type of data you're storing.
+Variables are the foundation of programming—think of them as labeled containers that store information. Unlike mathematical variables that represent unknown values, programming variables are storage locations with meaningful names.
 
-The fundamental data types in Python are:
-- **Integers (`int`)**: Whole numbers (e.g., 10, -5, 0).
-- **Floats (`float`)**: Decimal numbers (e.g., 3.14, -0.01).
-- **Strings (`str`)**: Sequences of characters (e.g., "hello", 'Python').
-- **Booleans (`bool`)**: Logical values, either `True` or `False`.
+In Python, creating a variable is beautifully simple: just assign a value to a name. Python uses dynamic typing, meaning it automatically determines what type of data you're storing. This flexibility makes Python incredibly beginner-friendly while remaining powerful.
+
+The fundamental data types in Python each serve specific purposes:
+
+**Integers** represent whole numbers and can be arbitrarily large—Python handles big numbers gracefully. **Floats** represent decimal numbers with limitations in precision due to computer memory constraints. **Strings** are sequences of characters that can contain text, symbols, and even numbers as characters. **Booleans** represent logical values and are essential for decision-making in programs.
+
+Understanding data types isn't just academic—different types have different capabilities and restrictions, affecting how your program behaves.
                 """,
                 code_example='''# Variables: labeled containers for your data
-name = "Alice"              # String
-age = 25                    # Integer
-height = 5.6                # Float
-is_student = True           # Boolean
+name = "Alice"              # String - text data
+age = 25                    # Integer - whole numbers
+height = 5.6                # Float - decimal numbers
+is_student = True           # Boolean - True or False
+account_balance = 1250.75   # Float - money is often decimal
+
+# Variables can change (that's why they're called "variable"!)
+age = 26  # Alice had a birthday!
 
 # Python is smart about types
 print(f"Name: {name} (type: {type(name).__name__})")
 print(f"Age: {age} (type: {type(age).__name__})")
+print(f"Height: {height} (type: {type(height).__name__})")
+print(f"Student: {is_student} (type: {type(is_student).__name__})")
+
+# Interesting fact: Python integers can be arbitrarily large!
+big_number = 12345678901234567890
+print(f"Big number: {big_number}")
 ''',
-                interactive_code='# Create your own variables!\nfavorite_food = "pizza"\nlucky_number = 7\nprint(f"My favorite food is {favorite_food}")',
+                interactive_code='# Create your own variables!\nfavorite_color = "blue"\nlucky_number = 7\nprint(f"My favorite color is {favorite_color}")\nprint(f"My lucky number is {lucky_number}")',
                 quiz=QuizData(
-                    question="Which data type would you use to store the value `True`?",
-                    options=["Integer", "String", "Boolean", "Float"],
-                    correct_index=2,
-                    explanation="The `bool` (Boolean) data type is used for `True` and `False` values.",
+                    question="Which of these creates a string variable in Python?",
+                    options=[
+                        'message = "Hello World"',
+                        'message = Hello World',
+                        'string message = "Hello World"',
+                        'message = (Hello World)'
+                    ],
+                    correct_index=0,
+                    explanation="Strings in Python must be enclosed in quotes (single or double). Python doesn't require type declarations.",
                     difficulty="beginner"
                 ),
                 prerequisites=["python_intro"],
-                keywords=["variables", "data types", "string", "integer", "float", "boolean"]
+                keywords=["variables", "data types", "strings", "integers", "floats", "booleans"]
             ),
-            # Chapter 3
+            
             ChapterData(
-                id="operators_expressions",
-                title="Chapter 3: Operators & Expressions",
+                id="operations",
+                title="Chapter 3: Operations and Expressions",
                 content="""
-Operators are special symbols in Python that carry out arithmetic or logical computation. The value that the operator operates on is called the operand.
+Operations in Python go far beyond basic arithmetic—they're the building blocks for complex logic and data manipulation. Understanding operations deeply will make you a more effective programmer.
 
-- **Arithmetic Operators**: `+`, `-`, `*`, `/`, `%` (modulo), `**` (exponent), `//` (floor division).
-- **Comparison Operators**: `==` (equal to), `!=` (not equal to), `>`, `<`, `>=`, `<=`.
-- **Logical Operators**: `and`, `or`, `not`.
+**Arithmetic operations** follow mathematical conventions with some programming-specific additions. The modulo operator (%) finds remainders and is surprisingly useful for checking if numbers are even/odd, creating cycles, and time calculations. The exponentiation operator (**) handles powers elegantly.
 
-An expression is a combination of values, variables, and operators. A simple expression can be `2 + 3`. An expression is evaluated as per the precedence of operators.
+**String operations** reveal Python's elegance. Concatenation joins strings, repetition creates patterns, and formatting creates dynamic text. Modern Python uses f-strings for readable, efficient string formatting.
+
+**Comparison operations** return boolean values and are essential for decision-making. They work with different data types, following intuitive rules most of the time.
+
+**Operator precedence** determines the order of operations, just like in mathematics. Parentheses can override precedence, making your intentions clear to both Python and human readers.
+
+Understanding these operations thoroughly will help you write more expressive and efficient code.
                 """,
-                code_example='''# Arithmetic operations
-x, y = 15, 4
-print(f"Addition: {x + y}")
-print(f"Modulo (remainder): {x % y}")
-print(f"Exponent: {2 ** 3}") # 2*2*2
+                code_example='''# Arithmetic operations - the foundation of computation
+x, y = 15, 4  # Multiple assignment - very Pythonic!
 
-# Comparison operations
-print(f"Is x greater than y? {x > y}")
+print("=== ARITHMETIC OPERATIONS ===")
+print(f"Addition: {x} + {y} = {x + y}")
+print(f"Subtraction: {x} - {y} = {x - y}")
+print(f"Multiplication: {x} * {y} = {x * y}")
+print(f"Division: {x} / {y} = {x / y}")           # Always returns float
+print(f"Floor Division: {x} // {y} = {x // y}")   # Integer division
+print(f"Modulo: {x} % {y} = {x % y}")             # Remainder
+print(f"Exponentiation: {x} ** {y} = {x ** y}")   # Power
 
-# Logical operations
-is_sunny = True
-is_warm = True
-print(f"Go to the beach? {is_sunny and is_warm}")
+print("\\n=== STRING OPERATIONS ===")
+first_name = "John"
+last_name = "Doe"
+full_name = first_name + " " + last_name  # Concatenation
+print(f"Full name: {full_name}")
+print(f"Repeated: {'Hi! ' * 3}")  # String repetition
+print(f"F-string magic: {first_name} is {age} years old")
+
+print("\\n=== COMPARISON OPERATIONS ===")
+print(f"{x} > {y}: {x > y}")
+print(f"{x} == {y}: {x == y}")  # Equality check
+print(f"'abc' < 'def': {'abc' < 'def'}")  # Lexicographic comparison
 ''',
-                interactive_code='# Experiment with operations!\na = 10\nb = 3\nprint(f"Floor Division: {a // b}") # Division that results into whole number adjusted to the left in the number line\nprint(f"Regular Division: {a / b}")',
+                interactive_code='# Experiment with operations!\na = 10\nb = 3\nprint(f"{a} / {b} = {a / b}")\nprint(f"{a} // {b} = {a // b}")\nprint(f"{a} % {b} = {a % b}")',
                 quiz=QuizData(
-                    question="What is the result of the expression `17 % 5`?",
+                    question="What does the expression 17 % 5 equal in Python?",
                     options=["3.4", "2", "3", "12"],
                     correct_index=1,
-                    explanation="The modulo operator (%) returns the remainder of a division. 17 divided by 5 is 3 with a remainder of 2.",
+                    explanation="The modulo operator (%) returns the remainder after division. 17 ÷ 5 = 3 remainder 2, so 17 % 5 = 2.",
                     difficulty="beginner"
                 ),
                 prerequisites=["variables_datatypes"],
-                keywords=["operators", "expressions", "arithmetic", "comparison", "logical"]
+                keywords=["arithmetic", "operators", "modulo", "strings", "comparisons", "precedence"]
             ),
-            # Chapter 4
+            
+            ChapterData(
+                id="lists_collections",
+                title="Chapter 4: Lists and Data Collections",
+                content="""
+Lists are Python's most versatile data structure—dynamic arrays that can grow, shrink, and hold any type of data. They're fundamental to almost every Python program you'll write.
+
+Unlike arrays in some languages, Python lists are incredibly flexible. They can hold mixed data types, resize automatically, and provide rich functionality through built-in methods. This flexibility comes with a small performance cost, but the productivity gain is enormous.
+
+**List indexing** starts at 0, a convention inherited from computer memory addressing. Negative indices count from the end, providing elegant access to tail elements. **Slicing** creates new lists from portions of existing ones, using the format [start:stop:step].
+
+**List methods** transform data efficiently. append() and extend() add elements, remove() and pop() delete them, sort() and reverse() reorder them. Understanding when to use each method will make your code more readable and efficient.
+
+**List comprehensions**, which we'll explore later, provide a powerful way to create and transform lists in a single, readable line.
+
+Lists are mutable, meaning you can change them after creation. This mutability is powerful but requires careful handling when lists are shared between different parts of your program.
+                """,
+                code_example='''# Lists: Dynamic, flexible data containers
+print("=== CREATING LISTS ===")
+fruits = ["apple", "banana", "cherry"]
+numbers = [1, 2, 3, 4, 5]
+mixed_list = ["hello", 42, True, 3.14, [1, 2, 3]]  # Lists can hold anything!
+
+print(f"Fruits: {fruits}")
+print(f"Mixed list: {mixed_list}")
+
+print("\\n=== ACCESSING ELEMENTS ===")
+print(f"First fruit: {fruits[0]}")        # Index starts at 0
+print(f"Last fruit: {fruits[-1]}")        # Negative index from end
+print(f"Middle fruits: {fruits[1:3]}")    # Slicing [start:end]
+
+print("\\n=== MODIFYING LISTS ===")
+fruits.append("date")                      # Add to end
+print(f"After append: {fruits}")
+
+fruits.insert(1, "apricot")               # Insert at position
+print(f"After insert: {fruits}")
+
+removed = fruits.pop()                     # Remove and return last
+print(f"Removed '{removed}': {fruits}")
+
+print("\\n=== LIST OPERATIONS ===")
+print(f"Length: {len(fruits)}")
+print(f"Is 'apple' in list: {'apple' in fruits}")
+print(f"Index of 'banana': {fruits.index('banana')}")
+
+# List concatenation and repetition
+more_fruits = ["elderberry", "fig"]
+all_fruits = fruits + more_fruits
+print(f"Combined: {all_fruits}")
+''',
+                interactive_code='# Create and manipulate your own list!\nmy_list = ["red", "green", "blue"]\nprint("Original:", my_list)\nmy_list.append("yellow")\nprint("After adding yellow:", my_list)\nprint("Second color:", my_list[1])',
+                quiz=QuizData(
+                    question="What is the result of [1, 2, 3, 4, 5][1:4]?",
+                    options=["[1, 2, 3, 4]", "[2, 3, 4]", "[2, 3, 4, 5]", "[1, 2, 3]"],
+                    correct_index=1,
+                    explanation="List slicing [1:4] starts at index 1 (value 2) and goes up to but not including index 4, giving [2, 3, 4].",
+                    difficulty="beginner"
+                ),
+                prerequisites=["operations"],
+                keywords=["lists", "indexing", "slicing", "methods", "append", "pop", "mutability"]
+            ),
+            
             ChapterData(
                 id="control_flow",
-                title="Chapter 4: Control Flow (if, else, loops)",
+                title="Chapter 5: Control Flow and Decision Making",
                 content="""
-Control flow is the order in which the program's code executes. The control flow of a Python program is regulated by conditional statements, loops, and function calls.
+Control flow transforms your programs from simple calculators into intelligent decision-makers. This is where programming becomes truly powerful—your code can analyze data, respond to conditions, and choose different paths of execution.
 
-- **`if`, `elif`, `else`**: These statements are used for decision making. An `if` statement is followed by one or more optional `elif` (else if) statements and a final optional `else` statement.
+**Conditional statements** mirror human decision-making. "If it's raining, take an umbrella" becomes `if weather == 'rain': bring_umbrella = True`. The elegance of Python's syntax makes these logical structures read almost like natural language.
 
-- **`for` loop**: Used for iterating over a sequence (that is either a list, a tuple, a dictionary, a set, or a string).
+**Boolean logic** is fundamental to control flow. Understanding how `and`, `or`, and `not` operators work, along with concepts like short-circuit evaluation, will help you write more efficient and readable conditions.
 
-- **`while` loop**: Repeats a statement or group of statements while a given condition is TRUE. It tests the condition before executing the loop body.
+**Nested conditions** handle complex scenarios where multiple factors influence decisions. However, deeply nested conditions can become hard to read—good programmers balance functionality with readability.
+
+**The elif ladder** provides an elegant way to handle multiple mutually exclusive conditions. It's more efficient than separate if statements because Python stops checking once a condition is True.
+
+**Truthiness** in Python extends beyond boolean values. Empty lists, zero, and None are "falsy," while non-empty strings and non-zero numbers are "truthy." This concept enables more Pythonic code.
+
+Mastering control flow is essential—it's the difference between programs that blindly execute instructions and programs that intelligently respond to their environment.
                 """,
-                code_example='''# if/elif/else statement
+                code_example='''# Control Flow: Making intelligent decisions
+import random
+
+print("=== BASIC CONDITIONAL LOGIC ===")
 age = 20
-if age < 18:
-    print("You are a minor.")
-elif age >= 18 and age < 65:
-    print("You are an adult.")
+has_license = True
+
+if age >= 18 and has_license:
+    print("✅ You can drive!")
+elif age >= 18:
+    print("📝 You need to get a license first")
 else:
-    print("You are a senior citizen.")
+    print("⏳ Wait until you're 18")
 
-# for loop
-fruits = ["apple", "banana", "cherry"]
-for fruit in fruits:
-    print(f"I like {fruit}s")
+print("\\n=== MULTIPLE CONDITIONS (elif ladder) ===")
+score = 87
 
-# while loop
-count = 0
-while count < 5:
-    print(f"Count is: {count}")
-    count += 1
-''',
-                interactive_code='# Write a loop that prints numbers from 1 to 10\nfor i in range(1, 11):\n    print(i)',
-                quiz=QuizData(
-                    question="Which loop is best suited for iterating through a list of items?",
-                    options=["if loop", "while loop", "for loop", "else loop"],
-                    correct_index=2,
-                    explanation="The `for` loop is designed specifically for iterating over sequences like lists.",
-                    difficulty="beginner"
-                ),
-                prerequisites=["operators_expressions"],
-                keywords=["control flow", "if", "elif", "else", "for loop", "while loop"]
-            ),
-            # Chapter 5
-            ChapterData(
-                id="functions",
-                title="Chapter 5: Functions",
-                content="""
-A function is a block of organized, reusable code that is used to perform a single, related action. Functions provide better modularity for your application and a high degree of code reusing.
-
-You can define functions to provide the required functionality. Here are simple rules to define a function in Python:
-- Function blocks begin with the keyword `def` followed by the function name and parentheses `()`.
-- Any input parameters or arguments should be placed within these parentheses.
-- The code block within every function starts with a colon `:` and is indented.
-- The statement `return [expression]` exits a function, optionally passing back an expression to the caller.
-                """,
-                code_example='''# A simple function to greet a person
-def greet(name):
-    """This function greets the person passed in as a parameter"""
-    print(f"Hello, {name}! Good morning!")
-
-# Calling the function
-greet("Alice")
-
-# A function that returns a value
-def add_numbers(x, y):
-    return x + y
-
-result = add_numbers(5, 3)
-print(f"The sum is: {result}")
-''',
-                interactive_code='# Write a function that multiplies two numbers\ndef multiply(a, b):\n    return a * b\n\nproduct = multiply(4, 7)\nprint(f"4 * 7 = {product}")',
-                quiz=QuizData(
-                    question="What keyword is used to define a function in Python?",
-                    options=["func", "function", "define", "def"],
-                    correct_index=3,
-                    explanation="The `def` keyword is used to start a function definition.",
-                    difficulty="beginner"
-                ),
-                prerequisites=["control_flow"],
-                keywords=["functions", "def", "return", "arguments", "parameters"]
-            ),
-            # Chapter 6
-            ChapterData(
-                id="data_structures",
-                title="Chapter 6: Data Structures",
-                content="""
-Python includes several built-in data structures that are used to store collections of data.
-
-- **Lists**: A collection which is ordered and changeable. Allows duplicate members. `my_list = [1, "a", 3.14]`
-- **Tuples**: A collection which is ordered and unchangeable. Allows duplicate members. `my_tuple = (1, "a", 3.14)`
-- **Dictionaries**: A collection which is unordered, changeable and indexed. No duplicate keys. `my_dict = {"key": "value", "age": 25}`
-- **Sets**: A collection which is unordered and unindexed. No duplicate members. `my_set = {1, 2, 3}`
-                """,
-                code_example='''# List example
-fruits = ["apple", "banana", "cherry"]
-fruits.append("orange")
-print(f"List of fruits: {fruits}")
-print(f"First fruit: {fruits[0]}")
-
-# Tuple example
-coordinates = (10.0, 20.0)
-print(f"Coordinates: {coordinates}")
-
-# Dictionary example
-person = {"name": "Bob", "age": 30}
-person["city"] = "New York"
-print(f"Person's age: {person['age']}")
-
-# Set example
-unique_numbers = {1, 2, 3, 2, 1}
-print(f"Unique numbers: {unique_numbers}")
-''',
-                interactive_code='# Create a dictionary for a car\ncar = {\n    "brand": "Tesla",\n    "model": "Model S",\n    "year": 2022\n}\nprint(f"Car model: {car[\'model\']}")',
-                quiz=QuizData(
-                    question="Which data structure does not allow duplicate items?",
-                    options=["List", "Tuple", "Dictionary", "Set"],
-                    correct_index=3,
-                    explanation="Sets are collections of unique items. Duplicates are automatically removed.",
-                    difficulty="beginner"
-                ),
-                prerequisites=["functions"],
-                keywords=["data structures", "lists", "tuples", "dictionaries", "sets"]
-            ),
-            # Chapter 7
-            ChapterData(
-                id="strings_regex",
-                title="Chapter 7: Strings & Regex",
-                content="""
-Strings are sequences of characters and are one of the most commonly used data types. Python provides a rich set of methods to manipulate strings, such as slicing, splitting, joining, and changing case.
-
-**Regular Expressions (Regex)** are a powerful tool for matching patterns in text. Python's `re` module provides support for regular expressions. You can use regex to find, replace, and validate complex string patterns, making it essential for tasks like data cleaning and web scraping.
-                """,
-                code_example='''import re
-
-# String manipulation
-my_string = "Hello, Python World!"
-print(f"Uppercase: {my_string.upper()}")
-print(f"Split into words: {my_string.split(',')}")
-print(f"Does it start with Hello? {my_string.startswith('Hello')}")
-
-# Regular Expression example: Find all numbers in a string
-text = "My phone number is 123-456-7890."
-phone_pattern = r'\\d{3}-\\d{3}-\\d{4}'
-match = re.search(phone_pattern, text)
-if match:
-    print(f"Phone number found: {match.group()}")
-''',
-                interactive_code='import re\n# Find all words that start with "P" in a sentence\nsentence = "Python programming is powerful and popular."\npattern = r\'\\b[P]\\w+\'\nmatches = re.findall(pattern, sentence, re.IGNORECASE)\nprint(f"Words starting with P: {matches}")',
-                quiz=QuizData(
-                    question="Which module in Python is used for regular expressions?",
-                    options=["regex", "string", "re", "pattern"],
-                    correct_index=2,
-                    explanation="The `re` module provides all the necessary functions for working with regular expressions.",
-                    difficulty="intermediate"
-                ),
-                prerequisites=["data_structures"],
-                keywords=["string manipulation", "regex", "regular expressions", "re module", "pattern matching"]
-            ),
-            # Chapter 8
-            ChapterData(
-                id="modules_packages",
-                title="Chapter 8: Modules & Packages",
-                content="""
-A **module** is a file containing Python definitions and statements. The file name is the module name with the suffix `.py` appended. Modules allow you to logically organize your Python code.
-
-A **package** is a way of structuring Python’s module namespace by using "dotted module names". A package is a directory of Python modules containing an additional `__init__.py` file.
-
-Using modules and packages helps in breaking down large programs into smaller, manageable, and organized files. It also promotes code reusability. Python has a vast standard library of modules you can import, like `math`, `random`, and `datetime`.
-                """,
-                code_example='''# Import the entire math module
-import math
-print(f"The value of Pi is: {math.pi}")
-print(f"The square root of 16 is: {math.sqrt(16)}")
-
-# Import a specific function from a module
-from random import randint
-random_number = randint(1, 10)
-print(f"A random number between 1 and 10: {random_number}")
-
-# You can also alias modules
-import datetime as dt
-current_time = dt.datetime.now()
-print(f"Current date and time: {current_time}")
-''',
-                interactive_code='# Import the `platform` module to find your OS\nimport platform\nprint(f"Your operating system is: {platform.system()}")',
-                quiz=QuizData(
-                    question="What is the purpose of the `import` statement?",
-                    options=["To export code to another file", "To make code from one module available in another", "To install a new package", "To create a new module"],
-                    correct_index=1,
-                    explanation="The `import` statement is used to bring modules or specific functions/classes from modules into the current scope.",
-                    difficulty="beginner"
-                ),
-                prerequisites=["functions"],
-                keywords=["modules", "packages", "import", "from", "standard library"]
-            ),
-            # Chapter 9
-            ChapterData(
-                id="file_handling",
-                title="Chapter 9: File Handling",
-                content="""
-File handling is an important part of any web application. Python has several functions for creating, reading, updating, and deleting files.
-
-The key function for working with files in Python is the `open()` function. The `open()` function takes two parameters; filename, and mode. There are four different methods (modes) for opening a file:
-- `"r"` - Read - Default value. Opens a file for reading, error if the file does not exist.
-- `"a"` - Append - Opens a file for appending, creates the file if it does not exist.
-- `"w"` - Write - Opens a file for writing, creates the file if it does not exist.
-- `"x"` - Create - Creates the specified file, returns an error if the file exists.
-
-It's best practice to use the `with` statement, as it automatically closes the file for you.
-                """,
-                code_example='''# Writing to a file
-with open("my_file.txt", "w") as f:
-    f.write("Hello, File World!\\n")
-    f.write("This is a new line.")
-
-# Reading from a file
-with open("my_file.txt", "r") as f:
-    content = f.read()
-    print("File Content:")
-    print(content)
-
-# Appending to a file
-with open("my_file.txt", "a") as f:
-    f.write("\\nThis line is appended.")
-
-# Reading again to see the change
-with open("my_file.txt", "r") as f:
-    print("\\nAppended File Content:")
-    print(f.read())
-''',
-                interactive_code='# Create a file and write your name to it\nmy_name = "Alex"\nwith open("name.txt", "w") as f:\n    f.write(my_name)\n\nwith open("name.txt", "r") as f:\n    print(f.read())',
-                quiz=QuizData(
-                    question="Which mode is used to open a file for writing, creating it if it doesn't exist?",
-                    options=["r", "a", "w", "x"],
-                    correct_index=2,
-                    explanation="The 'w' mode is for writing. It will create the file if it does not exist, and overwrite it if it does.",
-                    difficulty="beginner"
-                ),
-                prerequisites=["modules_packages"],
-                keywords=["file handling", "open", "read", "write", "append", "with statement"]
-            ),
-            # Chapter 10
-            ChapterData(
-                id="error_handling",
-                title="Chapter 10: Error Handling & Exceptions",
-                content="""
-Errors are problems in a program that the program cannot recover from. An **exception** is an event, which occurs during the execution of a program, that disrupts the normal flow of the program's instructions.
-
-In Python, exceptions are handled using `try`, `except`, `else`, and `finally` blocks.
-- **`try`**: The code that might raise an exception is placed in the `try` block.
-- **`except`**: If an exception occurs, the code in the `try` block is skipped, and the code in the `except` block is executed.
-- **`else`**: The code in the `else` block is executed if there is no exception.
-- **`finally`**: The `finally` block is always executed, whether an exception occurred or not. This is often used for cleanup actions.
-                """,
-                code_example='''# A simple try-except block
-try:
-    numerator = 10
-    denominator = 0
-    result = numerator / denominator
-    print(result)
-except ZeroDivisionError:
-    print("Error: Cannot divide by zero!")
-
-# Using else and finally
-try:
-    num = int(input("Enter a number: "))
-except ValueError:
-    print("That's not a valid number!")
+if score >= 90:
+    grade, message = "A", "Excellent work! 🌟"
+elif score >= 80:
+    grade, message = "B", "Good job! 👍"
+elif score >= 70:
+    grade, message = "C", "Satisfactory 📚"
+elif score >= 60:
+    grade, message = "D", "Needs improvement 📈"
 else:
-    print(f"You entered the number {num}")
-finally:
-    print("Execution finished.")
+    grade, message = "F", "Please see instructor 💬"
+
+print(f"Score: {score} → Grade: {grade}")
+print(f"Feedback: {message}")
+
+print("\\n=== BOOLEAN LOGIC AND TRUTHINESS ===")
+username = "alice"
+password = "secret123"
+is_admin = False
+
+# Multiple conditions with logical operators
+if username and password and len(password) >= 8:
+    print("✅ Login successful")
+    if is_admin:
+        print("🔑 Admin access granted")
+else:
+    print("❌ Login failed")
+
+# Truthiness examples
+empty_list = []
+if empty_list:  # Empty list is "falsy"
+    print("This won't print")
+else:
+    print("Empty list is falsy")
+
+print("\\n=== PRACTICAL EXAMPLE: Number Analysis ===")
+number = random.randint(1, 100)
+print(f"Analyzing number: {number}")
+
+if number % 2 == 0:
+    print("📊 Even number")
+else:
+    print("📊 Odd number")
+
+if number <= 25:
+    category = "Low"
+elif number <= 75:
+    category = "Medium"
+else:
+    category = "High"
+
+print(f"📈 Category: {category}")
 ''',
-                interactive_code='numbers = [1, 2, 3]\ntry:\n    print(numbers[5])\nexcept IndexError:\n    print("Error: That index does not exist!")',
+                interactive_code='# Decision making practice!\ntemperature = 75\n\nif temperature > 80:\n    print("Hot day! 🌞")\nelif temperature > 60:\n    print("Nice weather! 🌤️")\nelse:\n    print("Cool day! 🧥")\n\nprint(f"Temperature: {temperature}°F")',
                 quiz=QuizData(
-                    question="What is the purpose of the `finally` block in a try-except statement?",
-                    options=["To handle a specific error", "To run code only if no errors occur", "To run code regardless of whether an error occurred", "To raise a new error"],
-                    correct_index=2,
-                    explanation="The `finally` block is always executed, making it ideal for cleanup operations like closing files.",
-                    difficulty="intermediate"
-                ),
-                prerequisites=["file_handling"],
-                keywords=["error handling", "exceptions", "try", "except", "else", "finally"]
-            ),
-            # Chapter 11
-            ChapterData(
-                id="oop",
-                title="Chapter 11: OOP in Python",
-                content="""
-**Object-Oriented Programming (OOP)** is a programming paradigm based on the concept of "objects", which can contain data in the form of fields (often known as attributes or properties), and code, in the form of procedures (often known as methods).
-
-Key concepts of OOP include:
-- **Class**: A blueprint for creating objects.
-- **Object**: An instance of a class.
-- **Inheritance**: A way to form new classes using classes that have already been defined.
-- **Encapsulation**: Bundling the data and the methods that work on that data within one unit.
-- **Polymorphism**: The ability of an object to take on many forms.
-                """,
-                code_example='''# Define a class called Dog
-class Dog:
-    # Class attribute
-    species = "Canis familiaris"
-
-    # Initializer / Instance attributes
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
-
-    # instance method
-    def description(self):
-        return f"{self.name} is {self.age} years old"
-
-    # instance method
-    def speak(self, sound):
-        return f"{self.name} says {sound}"
-
-# Create an object (instance) of the Dog class
-my_dog = Dog("Buddy", 5)
-
-# Access attributes and call methods
-print(my_dog.description())
-print(my_dog.speak("Woof Woof"))
-print(f"{my_dog.name} is a {my_dog.species}.")
-''',
-                interactive_code='class Car:\n    def __init__(self, brand, model):\n        self.brand = brand\n        self.model = model\n\n    def display_info(self):\n        return f"This is a {self.brand} {self.model}."\n\nmy_car = Car("Toyota", "Corolla")\nprint(my_car.display_info())',
-                quiz=QuizData(
-                    question="What is a 'class' in the context of OOP?",
-                    options=["An instance of an object", "A blueprint for creating objects", "A function inside an object", "A variable belonging to an object"],
+                    question="What will this code print?\\n\\n```python\\nx = 0\\nif x:\\n    print('A')\\nelse:\\n    print('B')\\n```",
+                    options=["A", "B", "Nothing", "Error"],
                     correct_index=1,
-                    explanation="A class is a template or blueprint from which objects are created.",
-                    difficulty="intermediate"
-                ),
-                prerequisites=["error_handling"],
-                keywords=["OOP", "class", "object", "inheritance", "encapsulation", "polymorphism"]
-            ),
-            # Chapter 12
-            ChapterData(
-                id="decorators_generators",
-                title="Chapter 12: Decorators & Generators",
-                content="""
-**Decorators** are a very powerful and useful tool in Python since it allows programmers to modify the behavior of a function or class. Decorators allow us to wrap another function in order to extend the behavior of the wrapped function, without permanently modifying it.
-
-**Generators** are a simple and powerful tool for creating iterators. They are written like regular functions but use the `yield` statement whenever they want to return data. Each time `next()` is called on it, the generator resumes where it left off. This allows for creating large sequences without storing them all in memory.
-                """,
-                code_example='''# Decorator Example
-def my_decorator(func):
-    def wrapper():
-        print("Something is happening before the function is called.")
-        func()
-        print("Something is happening after the function is called.")
-    return wrapper
-
-@my_decorator
-def say_whee():
-    print("Whee!")
-
-say_whee()
-
-# Generator Example
-def my_generator(n):
-    for i in range(n):
-        yield i * i # yield makes this a generator
-
-# Iterate over the generator
-for num in my_generator(5):
-    print(num)
-''',
-                interactive_code='# A generator for the Fibonacci sequence\ndef fibonacci(limit):\n    a, b = 0, 1\n    while a < limit:\n        yield a\n        a, b = b, a + b\n\nfor num in fibonacci(100):\n    print(num)',
-                quiz=QuizData(
-                    question="What keyword is used in a generator function to return a value?",
-                    options=["return", "generate", "yield", "next"],
-                    correct_index=2,
-                    explanation="The `yield` keyword is used in generator functions. It pauses the function's execution and returns a value, ready to resume from the same point later.",
-                    difficulty="advanced"
-                ),
-                prerequisites=["oop"],
-                keywords=["decorators", "generators", "yield", "iterators"]
-            ),
-            # Chapter 13
-            ChapterData(
-                id="itertools_functools_collections",
-                title="Chapter 13: Itertools, Functools, Collections",
-                content="""
-Python's standard library includes powerful modules for advanced data handling and functional programming.
-
-- **`itertools`**: This module contains functions for creating and using iterators for efficient looping. It includes tools for creating combinations, permutations, and infinite sequences.
-
-- **`functools`**: This module is for higher-order functions: functions that act on or return other functions. `functools.wraps` is essential for writing good decorators.
-
-- **`collections`**: This module provides alternatives to Python's general purpose built-in containers like `dict`, `list`, `set`, and `tuple`. It includes `namedtuple()`, `deque`, `Counter`, `OrderedDict`, and `defaultdict`.
-                """,
-                code_example='''import itertools
-from collections import Counter
-from functools import reduce
-
-# itertools example: combinations
-letters = ['a', 'b', 'c']
-combs = itertools.combinations(letters, 2)
-print(f"Combinations of 2: {list(combs)}")
-
-# collections example: Counter
-word = "mississippi"
-counts = Counter(word)
-print(f"Letter counts: {counts}")
-print(f"Most common letter: {counts.most_common(1)}")
-
-# functools example: reduce
-numbers = [1, 2, 3, 4]
-product = reduce(lambda x, y: x * y, numbers)
-print(f"Product of numbers: {product}")
-''',
-                interactive_code='from collections import defaultdict\n\n# Use defaultdict to count items in a list\ns = [(\'yellow\', 1), (\'blue\', 2), (\'yellow\', 3), (\'blue\', 4), (\'red\', 1)]\nd = defaultdict(list)\nfor k, v in s:\n    d[k].append(v)\n\nprint(d.items())',
-                quiz=QuizData(
-                    question="Which `collections` object is best for counting hashable objects?",
-                    options=["defaultdict", "deque", "Counter", "namedtuple"],
-                    correct_index=2,
-                    explanation="`Counter` is a dictionary subclass specifically designed for counting objects.",
-                    difficulty="intermediate"
-                ),
-                prerequisites=["decorators_generators"],
-                keywords=["itertools", "functools", "collections", "Counter", "defaultdict", "reduce"]
-            ),
-            # Chapter 14
-            ChapterData(
-                id="virtual_env_pip",
-                title="Chapter 14: Virtual Environments & PIP",
-                content="""
-A **virtual environment** is a self-contained directory tree that contains a Python installation for a particular version of Python, plus a number of additional packages. This allows you to work on multiple projects with different dependencies without conflicts. The standard tool for creating virtual environments is `venv`.
-
-**PIP** is the package installer for Python. You can use pip to install packages from the Python Package Index (PyPI). It is the standard tool for managing third-party libraries.
-
-Common commands:
-- `python -m venv myenv` (Create a virtual environment named 'myenv')
-- `source myenv/bin/activate` (Activate on Mac/Linux)
-- `myenv\\Scripts\\activate` (Activate on Windows)
-- `pip install <package_name>` (Install a package)
-- `pip freeze > requirements.txt` (Save installed packages to a file)
-- `pip install -r requirements.txt` (Install packages from a file)
-                """,
-                code_example='''# These commands are run in your terminal, not in a Python script.
-
-# 1. Create a virtual environment
-# python3 -m venv project_env
-
-# 2. Activate it
-# On macOS/Linux:
-# source project_env/bin/activate
-# On Windows:
-# .\\project_env\\Scripts\\activate
-
-# 3. Install a package
-# pip install requests
-
-# 4. Check installed packages
-# pip list
-
-# 5. Save dependencies to a file
-# pip freeze > requirements.txt
-
-# 6. Deactivate the environment
-# deactivate
-''',
-                interactive_code='# This is a conceptual chapter.\n# The code shows how you would check for a package.\ntry:\n    import numpy\n    print("NumPy is installed!")\nexcept ImportError:\n    print("NumPy is not installed. Run: pip install numpy")\n',
-                quiz=QuizData(
-                    question="What is the primary purpose of a virtual environment?",
-                    options=["To make Python run faster", "To isolate project dependencies", "To write Python code online", "To automatically install all packages"],
-                    correct_index=1,
-                    explanation="Virtual environments create isolated spaces for projects, so each project can have its own set of dependencies that won't interfere with others.",
+                    explanation="In Python, 0 is considered 'falsy', so the condition `if x:` evaluates to False, and 'B' is printed.",
                     difficulty="beginner"
                 ),
-                prerequisites=["modules_packages"],
-                keywords=["virtual environment", "venv", "pip", "pypi", "dependencies", "requirements.txt"]
-            ),
-            # Chapter 15
-            ChapterData(
-                id="popular_libraries",
-                title="Chapter 15: Popular Libraries Basics",
-                content="""
-Python's power is greatly extended by its vast ecosystem of third-party libraries. Here are a few essentials for data science and visualization:
-
-- **NumPy**: The fundamental package for scientific computing with Python. It provides a high-performance multidimensional array object, and tools for working with these arrays.
-
-- **Pandas**: A fast, powerful, flexible and easy to use open source data analysis and manipulation tool. It's built on top of NumPy and provides data structures like Series and DataFrame.
-
-- **Matplotlib**: A comprehensive library for creating static, animated, and interactive visualizations in Python. It allows you to create plots, histograms, bar charts, and much more.
-                """,
-                code_example='''# You need to install these libraries first:
-# pip install numpy pandas matplotlib
-
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-
-# NumPy: Create an array
-a = np.array([1, 2, 3, 4, 5])
-print(f"NumPy array mean: {a.mean()}")
-
-# Pandas: Create a DataFrame
-data = {'Name': ['Alice', 'Bob', 'Charlie'], 'Age': [25, 30, 35]}
-df = pd.DataFrame(data)
-print("\\nPandas DataFrame:")
-print(df)
-print(f"\\nAverage age: {df['Age'].mean()}")
-
-# Matplotlib: Create a simple plot
-# (Plotting does not work in this simple execution environment,
-# but this is how you would write the code)
-# x = [1, 2, 3, 4]
-# y = [10, 20, 25, 30]
-# plt.plot(x, y)
-# plt.title("Simple Plot")
-# plt.show()
-print("\\nMatplotlib code is ready to generate a plot.")
-''',
-                interactive_code='import pandas as pd\n\ndata = {\n    "Product": ["Apples", "Bananas", "Cherries"],\n    "Price": [1.2, 0.5, 2.5]\n}\ndf = pd.DataFrame(data)\nprint(df)',
-                quiz=QuizData(
-                    question="Which library is primarily used for data analysis and provides the DataFrame object?",
-                    options=["NumPy", "Matplotlib", "Pandas", "SciPy"],
-                    correct_index=2,
-                    explanation="Pandas is the go-to library for data manipulation and analysis in Python, with the DataFrame being its central data structure.",
-                    difficulty="intermediate"
-                ),
-                prerequisites=["virtual_env_pip"],
-                keywords=["numpy", "pandas", "matplotlib", "data science", "visualization"]
-            ),
-            # Chapter 16
-            ChapterData(
-                id="intermediate_topics",
-                title="Chapter 16: Intermediate Topics",
-                content="""
-Once you're comfortable with the basics, you can explore more advanced concepts to write more efficient and powerful programs.
-
-- **Threading**: Allows you to run multiple threads (smaller units of a process) concurrently. This is useful for I/O-bound tasks, like making multiple web requests at the same time, where the program would otherwise spend time waiting.
-
-- **Multiprocessing**: Allows you to run multiple processes in parallel, taking full advantage of multiple CPU cores. This is ideal for CPU-bound tasks, like heavy mathematical computations, that can be broken down into independent parts.
-                """,
-                code_example='''import threading
-import multiprocessing
-import time
-
-# --- Threading Example ---
-# (Note: True concurrency is limited by the GIL in CPython)
-def worker_thread(name):
-    print(f"Thread {name}: starting")
-    time.sleep(2)
-    print(f"Thread {name}: finishing")
-
-thread1 = threading.Thread(target=worker_thread, args=(1,))
-thread2 = threading.Thread(target=worker_thread, args=(2,))
-# thread1.start()
-# thread2.start()
-# thread1.join()
-# thread2.join()
-print("Threading example code structure is correct.")
-
-
-# --- Multiprocessing Example ---
-def worker_process(name):
-    print(f"Process {name}: starting")
-    time.sleep(2)
-    print(f"Process {name}: finishing")
-
-# The following code needs to be run inside `if __name__ == '__main__':`
-# p1 = multiprocessing.Process(target=worker_process, args=(1,))
-# p2 = multiprocessing.Process(target=worker_process, args=(2,))
-# p1.start()
-# p2.start()
-# p1.join()
-# p2.join()
-print("\\nMultiprocessing example code structure is correct.")
-''',
-                interactive_code='# This is a conceptual chapter.\n# The code shows a simple function that could be a target for threading.\ndef long_running_task():\n    print("Task started...")\n    time.sleep(1) # Simulate work\n    print("Task finished!")\n\nlong_running_task()',
-                quiz=QuizData(
-                    question="Which concept is better for CPU-bound tasks to leverage multiple cores?",
-                    options=["Threading", "Multiprocessing", "Generators", "Decorators"],
-                    correct_index=1,
-                    explanation="Multiprocessing bypasses the Global Interpreter Lock (GIL) by creating separate processes, allowing for true parallelism on multi-core systems.",
-                    difficulty="advanced"
-                ),
-                prerequisites=["popular_libraries"],
-                keywords=["threading", "multiprocessing", "concurrency", "parallelism", "cpu-bound", "io-bound"]
-            ),
-            # Chapter 17
-            ChapterData(
-                id="advanced_topics",
-                title="Chapter 17: Advanced Topics",
-                content="""
-Diving deeper into Python reveals powerful features for metaprogramming and resource management.
-
-- **Metaclasses**: A metaclass is a class whose instances are classes. Just as a class defines how an instance of the class behaves, a metaclass defines how a class behaves. It's an advanced topic used for creating frameworks and libraries where you need to modify class creation.
-
-- **Context Managers**: A context manager is an object that defines the methods `__enter__()` and `__exit__()`. The `with` statement uses context managers to ensure that resources are properly acquired and released. File handling is a common example, but you can create your own for things like database connections or network sockets.
-                """,
-                code_example='''# --- Context Manager Example ---
-class MyTimer:
-    def __enter__(self):
-        self.start_time = time.time()
-        print("Timer started.")
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        end_time = time.time()
-        duration = end_time - self.start_time
-        print(f"Timer stopped. Duration: {duration:.4f} seconds.")
-
-# Using the context manager
-with MyTimer():
-    # Simulate some work
-    time.sleep(1.5)
-
-# --- Metaclass Example (Conceptual) ---
-# This is a very simplified example to show the syntax.
-class MyMeta(type):
-    def __new__(cls, name, bases, dct):
-        print(f"Creating class: {name}")
-        dct['extra_attribute'] = "Hello from Metaclass!"
-        return super().__new__(cls, name, bases, dct)
-
-class MyClass(metaclass=MyMeta):
-    pass
-
-print(MyClass.extra_attribute)
-''',
-                interactive_code='# Create a simple context manager to reverse a string\nclass StringReverser:\n    def __init__(self, text):\n        self.text = text\n\n    def __enter__(self):\n        return self.text[::-1]\n\n    def __exit__(self, type, value, traceback):\n        print("Reversing complete.")\n\nwith StringReverser("hello") as reversed_text:\n    print(reversed_text)',
-                quiz=QuizData(
-                    question="What is the primary purpose of a context manager and the `with` statement?",
-                    options=["To create classes dynamically", "To manage resources and ensure cleanup", "To speed up code execution", "To handle multiple threads"],
-                    correct_index=1,
-                    explanation="Context managers guarantee that setup and teardown code (like opening and closing a file) is executed, even if errors occur.",
-                    difficulty="advanced"
-                ),
-                prerequisites=["intermediate_topics"],
-                keywords=["metaclasses", "context managers", "with statement", "__enter__", "__exit__"]
-            ),
-            # Chapter 18
-            ChapterData(
-                id="final_project",
-                title="Chapter 18: Final Chapter – Build Your Own Project",
-                content="""
-Congratulations on reaching the final chapter! You've learned the building blocks of Python, from the basics to advanced concepts. Now it's time to put it all together and build something of your own.
-
-**The best way to solidify your knowledge is by creating a project.** Choose something that interests you. Here are some ideas:
-- **A command-line to-do list application**: Practice file handling, functions, and user input.
-- **A simple calculator with a GUI**: Use a library like Tkinter or PyQt.
-- **A web scraper**: Use libraries like `requests` and `BeautifulSoup` to extract data from a website.
-- **A basic data analysis project**: Use `pandas` and `matplotlib` to analyze a dataset you find online.
-
-The journey of a programmer is one of continuous learning and building. Don't be afraid to start small, make mistakes, and consult documentation. The skills you've gained here are your foundation for a lifetime of creating with code.
-                """,
-                code_example='''# Example Project Idea: A Simple Command-Line To-Do List
-
-# todos.txt will store our tasks
-
-def show_tasks():
-    try:
-        with open("todos.txt", "r") as f:
-            tasks = f.readlines()
-            if tasks:
-                for i, task in enumerate(tasks, 1):
-                    print(f"{i}. {task.strip()}")
-            else:
-                print("Your to-do list is empty!")
-    except FileNotFoundError:
-        print("Your to-do list is empty!")
-
-def add_task(task):
-    with open("todos.txt", "a") as f:
-        f.write(task + "\\n")
-    print(f"Added task: {task}")
-
-# This is a simplified structure. You would build a full
-# application around these functions with user input loops.
-
-print("--- To-Do List Application ---")
-add_task("Learn Python")
-add_task("Build a project")
-show_tasks()
-''',
-                interactive_code='# A mini-project: A number guessing game\nimport random\n\nsecret_number = random.randint(1, 20)\nguess = 0\n\nwhile guess != secret_number:\n    try:\n        guess = int(input("Guess a number between 1 and 20: "))\n        if guess < secret_number:\n            print("Too low!")\n        elif guess > secret_number:\n            print("Too high!")\n    except ValueError:\n        print("Please enter a valid number.")\n\nprint(f"You got it! The number was {secret_number}")',
-                quiz=QuizData(
-                    question="What is the most important step after learning the fundamentals of a programming language?",
-                    options=["Memorizing all library functions", "Reading more books", "Building projects", "Learning another language immediately"],
-                    correct_index=2,
-                    explanation="Building projects is crucial because it applies your knowledge to real-world problems, solidifies concepts, and teaches you how to solve problems independently.",
-                    difficulty="beginner"
-                ),
-                prerequisites=["advanced_topics"],
-                keywords=["project", "build", "practice", "portfolio", "learning"]
+                prerequisites=["lists_collections"],
+                keywords=["conditionals", "if", "elif", "else", "boolean", "logic", "truthiness"]
             )
         ]
 
@@ -958,48 +467,38 @@ show_tasks()
 
 class SecurityManager:
     """Handles code execution security and validation"""
-
+    
     FORBIDDEN_IMPORTS = {
         'os', 'sys', 'subprocess', 'shutil', 'socket', 'urllib', 'requests',
         'pickle', 'marshal', 'shelve', '__import__', 'eval', 'exec'
     }
-
+    
     FORBIDDEN_FUNCTIONS = {
         'open', 'input', 'raw_input', '__import__', 'reload', 'compile',
         'eval', 'exec', 'globals', 'locals', 'vars', 'dir'
     }
-
+    
     @classmethod
     def validate_code(cls, code: str) -> tuple[bool, str]:
         """Validate code for security issues"""
         if len(code) > AppConfig.MAX_CODE_LENGTH:
             return False, f"Code too long (max {AppConfig.MAX_CODE_LENGTH} characters)"
-
+        
         # Check for forbidden imports
         lines = code.lower().split('\n')
         for line in lines:
             line = line.strip()
-            # Allow specific safe imports
             if line.startswith('import ') or 'from ' in line:
-                if 'import re' in line or 'import time' in line or 'import random' in line or 'import platform' in line:
-                    continue
-                if 'from collections' in line or 'from functools' in line or 'import itertools' in line:
-                    continue
-                if 'import pandas' in line or 'import numpy' in line:
-                     continue
                 for forbidden in cls.FORBIDDEN_IMPORTS:
                     if forbidden in line:
                         return False, f"Import '{forbidden}' not allowed for security"
-
+        
         # Check for forbidden functions
         code_lower = code.lower()
         for forbidden in cls.FORBIDDEN_FUNCTIONS:
-            # Allow input for the final project
-            if 'final_project' in st.session_state.get('current_chapter_id', '') and forbidden == 'input':
-                continue
             if forbidden + '(' in code_lower:
                 return False, f"Function '{forbidden}' not allowed for security"
-
+        
         return True, "Code validation passed"
 
     @classmethod
@@ -1010,53 +509,63 @@ class SecurityManager:
             is_valid, validation_msg = cls.validate_code(code)
             if not is_valid:
                 return False, validation_msg
-
+            
             # Redirect stdout and stderr
             old_stdout = sys.stdout
             old_stderr = sys.stderr
             stdout_buffer = io.StringIO()
             stderr_buffer = io.StringIO()
-
+            
             # Create restricted globals
             restricted_globals = {
                 '__builtins__': {
-                    'print': print, 'len': len, 'str': str, 'int': int, 'float': float,
-                    'bool': bool, 'list': list, 'dict': dict, 'tuple': tuple, 'set': set,
-                    'range': range, 'enumerate': enumerate, 'zip': zip, 'sorted': sorted,
-                    'reversed': reversed, 'sum': sum, 'min': min, 'max': max, 'abs': abs,
-                    'round': round, 'type': type, 'input': input
-                },
-                're': re, 'time': time, 'random': random, 'platform': __import__('platform'),
-                'collections': __import__('collections'), 'itertools': __import__('itertools'),
-                'functools': __import__('functools'), 'pandas': __import__('pandas'), 'numpy': __import__('numpy')
+                    'print': print,
+                    'len': len,
+                    'str': str,
+                    'int': int,
+                    'float': float,
+                    'bool': bool,
+                    'list': list,
+                    'dict': dict,
+                    'tuple': tuple,
+                    'set': set,
+                    'range': range,
+                    'enumerate': enumerate,
+                    'zip': zip,
+                    'sorted': sorted,
+                    'reversed': reversed,
+                    'sum': sum,
+                    'min': min,
+                    'max': max,
+                    'abs': abs,
+                    'round': round,
+                    'type': type,
+                }
             }
-
+            
             sys.stdout = stdout_buffer
             sys.stderr = stderr_buffer
-
+            
             # Execute with timeout simulation (basic)
             start_time = time.time()
             exec(code, restricted_globals)
             execution_time = time.time() - start_time
-
+            
             if execution_time > AppConfig.MAX_CODE_EXECUTION_TIME:
                 return False, "Code execution timed out"
-
+            
             # Get outputs
             stdout_content = stdout_buffer.getvalue()
             stderr_content = stderr_buffer.getvalue()
-
+            
             if stderr_content:
                 return False, f"Error: {stderr_content}"
-
+            
             return True, stdout_content or "Code executed successfully (no output)"
-
+            
         except Exception as e:
-            # Handle input() reaching EOF in non-interactive environment
-            if "EOF when reading a line" in str(e):
-                 return True, "Code expecting input ran without errors. Try providing input in a real terminal."
             return False, f"Execution error: {str(e)}"
-
+        
         finally:
             # Always restore stdout/stderr
             sys.stdout = old_stdout
@@ -1065,7 +574,7 @@ class SecurityManager:
 
 class ProgressManager:
     """Manages user progress and achievements"""
-
+    
     @staticmethod
     def initialize_progress() -> UserProgress:
         """Initialize new user progress"""
@@ -1075,21 +584,21 @@ class ProgressManager:
             time_spent={},
             last_accessed=datetime.now()
         )
-
+    
     @staticmethod
     def is_chapter_unlocked(chapter_index: int, progress: UserProgress) -> bool:
         """Check if chapter is unlocked based on progress"""
         if chapter_index == 0:
             return True  # First chapter always unlocked
-
+        
         chapters = ChapterRepository.get_all_chapters()
         if chapter_index >= len(chapters):
             return False
-
+            
         # Check if previous chapter is completed
         prev_chapter = chapters[chapter_index - 1]
         return prev_chapter.id in progress.completed_chapters
-
+    
     @staticmethod
     def complete_chapter(chapter_id: str, quiz_score: int, progress: UserProgress) -> UserProgress:
         """Mark chapter as completed with score"""
@@ -1097,7 +606,7 @@ class ProgressManager:
         progress.quiz_scores[chapter_id] = quiz_score
         progress.last_accessed = datetime.now()
         return progress
-
+    
     @staticmethod
     def calculate_overall_progress(progress: UserProgress) -> float:
         """Calculate overall completion percentage"""
@@ -1110,7 +619,7 @@ class ProgressManager:
 
 class SessionManager:
     """Manages Streamlit session state and persistence"""
-
+    
     @staticmethod
     def initialize_session():
         """Initialize all session state variables"""
@@ -1122,15 +631,18 @@ class SessionManager:
             'code_outputs': {},
             'quiz_attempts': {},
             'ui_preferences': {
-                'theme': 'dark',
+                'theme': 'light',
                 'font_size': 'medium'
             }
         }
-
+        
         for key, default_value in defaults.items():
             if key not in st.session_state:
-                st.session_state[key] = default_value
-
+                if key == 'user_progress':
+                    st.session_state[key] = default_value
+                else:
+                    st.session_state[key] = default_value
+    
     @staticmethod
     def navigate_to(page: PageType, chapter_id: Optional[str] = None):
         """Navigate to a specific page"""
@@ -1138,12 +650,12 @@ class SessionManager:
         if chapter_id:
             st.session_state.current_chapter_id = chapter_id
         st.rerun()
-
+    
     @staticmethod
     def get_progress() -> UserProgress:
         """Get current user progress"""
         return st.session_state.user_progress
-
+    
     @staticmethod
     def save_progress(progress: UserProgress):
         """Save user progress to session"""
@@ -1154,7 +666,7 @@ class SessionManager:
 
 class UIComponents:
     """Reusable UI components and styling"""
-
+    
     @staticmethod
     @st.cache_data
     def load_css() -> str:
@@ -1280,378 +792,774 @@ class UIComponents:
                 font-family: 'Crimson Text', serif;
             }
             
-            .code-section, .interactive-section, .quiz-container {
+            .page-content p {
+                margin-bottom: 1.2rem;
+            }
+            
+            .code-section {
+                background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+                border: 2px solid var(--secondary-color);
+                border-radius: 12px;
+                padding: 1.5rem;
+                margin: 2rem 0;
+                box-shadow: var(--shadow-medium);
+                position: relative;
+            }
+            
+            .code-section::before {
+                content: '💻 Code Example';
+                position: absolute;
+                top: -12px;
+                left: 20px;
+                background: var(--secondary-color);
+                color: var(--primary-color);
+                padding: 4px 12px;
+                border-radius: 6px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                font-family: 'Inter', sans-serif;
+            }
+            
+            .interactive-section {
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                border: 2px dashed #6c757d;
                 border-radius: 12px;
                 padding: 1.5rem;
                 margin: 2rem 0;
                 position: relative;
-                box-shadow: var(--shadow-medium);
-            }
-
-            .code-section {
-                background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-                border: 1px solid var(--border-color);
             }
             
-            .interactive-section {
-                background: #252525;
-                border: 1px solid var(--border-color);
-            }
-
-            .quiz-container {
-                background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-                border: 1px solid var(--secondary-color);
-            }
-
-            .code-section::before, .interactive-section::before, .quiz-container::before {
+            .interactive-section::before {
+                content: '🚀 Interactive Code';
                 position: absolute;
-                top: -14px;
+                top: -12px;
                 left: 20px;
+                background: #007bff;
+                color: white;
                 padding: 4px 12px;
-                border-radius: 8px;
+                border-radius: 6px;
                 font-size: 0.85rem;
                 font-weight: 600;
                 font-family: 'Inter', sans-serif;
-                color: var(--background-dark);
             }
-
-            .code-section::before { content: '💻 Code Example'; background-color: var(--secondary-color); }
-            .interactive-section::before { content: '🚀 Interactive Code'; background-color: var(--secondary-color); }
-            .quiz-container::before { content: '🎯 Knowledge Check'; background-color: var(--secondary-color); }
+            
+            .quiz-container {
+                background: linear-gradient(135deg, #fff8dc 0%, #f0e68c 20%, #fff8dc 100%);
+                border: 2px solid #daa520;
+                border-radius: 15px;
+                padding: 2rem;
+                margin: 2rem 0;
+                box-shadow: var(--shadow-medium);
+                position: relative;
+            }
+            
+            .quiz-container::before {
+                content: '🎯 Knowledge Check';
+                position: absolute;
+                top: -12px;
+                left: 20px;
+                background: #daa520;
+                color: white;
+                padding: 4px 12px;
+                border-radius: 6px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                font-family: 'Inter', sans-serif;
+            }
             
             .quiz-question {
-                color: var(--text-primary);
-                font-size: 1.2rem;
+                color: var(--secondary-color);
+                font-size: 1.3rem;
                 font-weight: 600;
-                margin-bottom: 1rem;
+                margin-bottom: 1.5rem;
+                line-height: 1.5;
+            }
+            
+            .progress-indicator {
+                background: linear-gradient(90deg, var(--secondary-color) 0%, #ffd700 100%);
+                height: 12px;
+                border-radius: 6px;
+                margin: 1rem 0;
+                box-shadow: var(--shadow-light);
+                overflow: hidden;
+                position: relative;
+            }
+            
+            .progress-indicator::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+            }
+            
+            .bookmark {
+                position: absolute;
+                top: -8px;
+                right: 30px;
+                background: var(--accent-color);
+                color: white;
+                padding: 12px 18px;
+                border-radius: 0 0 15px 15px;
+                font-weight: 600;
+                box-shadow: var(--shadow-medium);
+                font-family: 'Inter', sans-serif;
+                z-index: 10;
             }
             
             .toc-item {
                 background: linear-gradient(135deg, var(--background-light) 0%, #2a2a2a 100%);
-                border: 1px solid var(--border-color);
+                border: 2px solid var(--border-color);
                 border-radius: 12px;
-                padding: 1rem 1.5rem;
-                margin: 0.75rem 0;
+                padding: 1.5rem;
+                margin: 1rem 0;
                 cursor: pointer;
-                transition: all 0.2s ease-in-out;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                position: relative;
+                overflow: hidden;
                 color: var(--text-primary);
             }
-
+            
+            .toc-item::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+                transition: left 0.5s ease;
+            }
+            
+            .toc-item:hover::before {
+                left: 100%;
+            }
+            
             .toc-item:hover {
-                transform: translateY(-2px);
-                box-shadow: var(--shadow-medium);
-                border-color: var(--primary-color);
+                transform: translateX(8px) translateY(-2px);
+                box-shadow: var(--shadow-heavy);
+                border-color: var(--secondary-color);
             }
             
             .locked-chapter {
-                opacity: 0.5;
+                opacity: 0.6;
                 pointer-events: none;
-                background: #101010;
+                background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+                border-color: #666;
             }
-
+            
             .completed-chapter {
-                background: linear-gradient(135deg, #2E4031 0%, #1a2b1f 100%);
-                border-color: #38761d;
+                background: linear-gradient(135deg, #1a3d1a 0%, #2d5a2d 100%);
+                border-color: #28a745;
+                box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            }
+            
+            .current-chapter {
+                background: linear-gradient(135deg, #3d3d1a 0%, #5a5a2d 100%);
+                border-color: #ffc107;
+                border-width: 3px;
+                box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
             }
             
             .page-number {
-                text-align: right;
+                position: absolute;
+                bottom: 20px;
+                right: 30px;
                 color: var(--text-secondary);
                 font-style: italic;
                 font-size: 0.9rem;
-                margin-top: 2rem;
+                font-family: 'Inter', sans-serif;
+            }
+            
+            .nav-button {
+                background: linear-gradient(135deg, var(--secondary-color) 0%, #b8860b 100%);
+                border: none;
+                color: var(--background-dark);
+                padding: 12px 24px;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-weight: 600;
+                font-family: 'Inter', sans-serif;
+                box-shadow: var(--shadow-light);
+            }
+            
+            .nav-button:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-medium);
+            }
+            
+            .nav-button:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none;
+            }
+            
+            .success-message {
+                background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+                border: 2px solid #28a745;
+                border-radius: 10px;
+                padding: 1rem;
+                margin: 1rem 0;
+                color: #155724;
+                font-weight: 600;
+            }
+            
+            .error-message {
+                background: linear-gradient(135deg, #f8d7da 0%, #f1aeb5 100%);
+                border: 2px solid #dc3545;
+                border-radius: 10px;
+                padding: 1rem;
+                margin: 1rem 0;
+                color: #721c24;
+                font-weight: 600;
+            }
+            
+            .info-box {
+                background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+                border: 2px solid #17a2b8;
+                border-radius: 10px;
+                padding: 1.5rem;
+                margin: 1.5rem 0;
+                color: #0c5460;
+                position: relative;
+            }
+            
+            .info-box::before {
+                content: 'ℹ️';
+                position: absolute;
+                top: -12px;
+                left: 20px;
+                background: #17a2b8;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 50%;
+                font-size: 0.8rem;
+            }
+            
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                .main-container {
+                    margin: 1rem;
+                    padding: 1.5rem;
+                }
+                
+                .cover-page {
+                    padding: 3rem 1rem;
+                    margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+                }
+                
+                .chapter-header {
+                    font-size: 1.8rem;
+                }
+                
+                .page-content {
+                    font-size: 1.1rem;
+                    text-align: left;
+                }
+            }
+            
+            /* Animation Classes */
+            .fade-in {
+                animation: fadeIn 0.6s ease-in;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            .slide-in {
+                animation: slideIn 0.5s ease-out;
+            }
+            
+            @keyframes slideIn {
+                from { transform: translateX(-30px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
             }
         </style>
         """
-
+    
     @staticmethod
     def render_progress_bar(progress_percentage: float, show_text: bool = True) -> None:
         """Render a progress bar"""
         progress_html = f"""
         <div style="margin: 1.5rem 0;">
             {f'<h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">📊 Your Progress: {progress_percentage:.1f}%</h3>' if show_text else ''}
-            <div style="background: #333; border-radius: 10px; height: 20px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);">
-                <div style="background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%); width: {progress_percentage}%; height: 100%; transition: width 0.8s ease;"></div>
+            <div style="background: #e9ecef; border-radius: 10px; height: 20px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);">
+                <div class="progress-indicator" style="width: {progress_percentage}%; height: 100%; transition: width 0.8s ease;"></div>
             </div>
         </div>
         """
         st.markdown(progress_html, unsafe_allow_html=True)
-
-
+    
     @staticmethod
     def render_chapter_status(chapter_index: int, chapter: ChapterData, is_completed: bool, is_current: bool, is_locked: bool) -> None:
         """Render chapter status in table of contents"""
-        status_icon = '✅' if is_completed else '🔒' if is_locked else '📖'
-        status_text = 'Completed!' if is_completed else 'Locked' if is_locked else 'Ready to learn'
+        status_icons = {
+            'completed': '✅',
+            'current': '📍', 
+            'available': '📖',
+            'locked': '🔒'
+        }
         
-        container_class = "toc-item"
-        if is_locked:
-            container_class += " locked-chapter"
         if is_completed:
-            container_class += " completed-chapter"
-
-        with st.container():
-            st.markdown(f'<div class="{container_class}">', unsafe_allow_html=True)
-            col1, col2 = st.columns([1, 5])
-            with col1:
-                st.markdown(f'<div style="font-size: 1.5rem; text-align: center; margin-top: 10px;">{status_icon}</div>', unsafe_allow_html=True)
-            with col2:
-                st.markdown(f"**{chapter.title}**")
-                st.markdown(f"<small style='color: var(--text-secondary);'><i>{status_text} | ⏱️ Est. {chapter.estimated_time} min</i></small>", unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
+            status = 'completed'
+            css_class = 'completed-chapter'
+            status_text = 'Completed!'
+        elif is_current:
+            status = 'current'
+            css_class = 'current-chapter'
+            status_text = 'Continue reading'
+        elif is_locked:
+            status = 'locked'
+            css_class = 'locked-chapter'
+            status_text = 'Complete previous chapters to unlock'
+        else:
+            status = 'available'
+            css_class = 'toc-item'
+            status_text = 'Ready to learn'
+        
+        chapter_html = f"""
+        <div class="toc-item {css_class} fade-in" style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="flex: 1;">
+                <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                    <span style="font-size: 1.5rem; margin-right: 0.5rem;">{status_icons[status]}</span>
+                    <strong style="color: var(--primary-color); font-size: 1.2rem;">{chapter.title}</strong>
+                </div>
+                <div style="margin-left: 2rem;">
+                    <small style="color: var(--text-secondary); margin-right: 1rem;">
+                        <i>{status_text}</i>
+                    </small>
+                    <small style="color: var(--text-secondary);">
+                        ⏱️ Est. {chapter.estimated_time} min
+                    </small>
+                </div>
+                {f'<div style="margin-left: 2rem; margin-top: 0.5rem;"><small style="color: var(--text-secondary);">Keywords: {", ".join(chapter.keywords)}</small></div>' if chapter.keywords else ''}
+            </div>
+        </div>
+        """
+        
+        st.markdown(chapter_html, unsafe_allow_html=True)
 
 
 # ==================== PAGE CONTROLLERS ====================
 
 class CoverPageController:
     """Handles cover page logic and rendering"""
-
+    
     @staticmethod
     def render():
         """Render the cover page"""
         st.markdown(UIComponents.load_css(), unsafe_allow_html=True)
-
+        
         cover_html = f"""
-        <div class="main-container">
+        <div class="main-container fade-in">
             <div class="cover-page">
                 <h1 class="cover-title">📚 Python Interactive Textbook</h1>
                 <p class="cover-subtitle">A Magical Journey from Beginner to Pythonista</p>
-                 <div style="font-size: 1.15rem; margin: 2rem 0; line-height: 1.6;">
+                <div style="font-size: 1.15rem; margin: 2rem 0; line-height: 1.6;">
                     <p>Welcome to an extraordinary learning experience that transforms the way you discover Python programming.</p>
                     <p>This isn't just another tutorial—it's your personal guide through the world of code, complete with:</p>
-                    <ul style="text-align: left; max-width: 500px; margin: 1.5rem auto; list-style-type: '✨ '; padding-left: 20px;">
-                        <li>Interactive chapters that adapt to your pace</li>
-                        <li>Live code execution and experimentation</li>
-                        <li>Smart quizzes that reinforce learning</li>
-                        <li>Progress tracking and achievements</li>
-                        <li>Automatic bookmarking of your journey</li>
+                    <ul style="text-align: left; max-width: 500px; margin: 1.5rem auto;">
+                        <li>📖 Interactive chapters that adapt to your pace</li>
+                        <li>💻 Live code execution and experimentation</li>
+                        <li>🎯 Smart quizzes that reinforce learning</li>
+                        <li>📊 Progress tracking and achievements</li>
+                        <li>🔖 Automatic bookmarking of your journey</li>
                     </ul>
                 </div>
-                <p style="font-size: 1rem; opacity: 0.8; margin-top: 2rem;">
+                <p style="font-size: 1rem; opacity: 0.9; margin-top: 2rem;">
                     Version {AppConfig.VERSION} | Crafted for curious minds
                 </p>
             </div>
         </div>
         """
+        
         st.markdown(cover_html, unsafe_allow_html=True)
-
-        if st.button("🚀 Begin Your Journey", key="start_journey", use_container_width=True, type="primary"):
-            logger.info("User started their learning journey")
-            SessionManager.navigate_to(PageType.TABLE_OF_CONTENTS)
+        
+        # Center the start button
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            if st.button("🚀 Begin Your Journey", key="start_journey", use_container_width=True, type="primary"):
+                logger.info("User started their learning journey")
+                SessionManager.navigate_to(PageType.TABLE_OF_CONTENTS)
 
 
 class TableOfContentsController:
     """Handles table of contents logic and rendering"""
-
+    
     @staticmethod
     def render():
         """Render the table of contents"""
         st.markdown(UIComponents.load_css(), unsafe_allow_html=True)
-
+        
         progress = SessionManager.get_progress()
         progress_percentage = ProgressManager.calculate_overall_progress(progress)
         chapters = ChapterRepository.get_all_chapters()
-
-        st.markdown(
-            """
-            <div class="main-container">
-                <h1 class="chapter-header">📋 Table of Contents</h1>
-                <p class="page-content">
-                    Welcome back to your Python journey! Your progress is automatically saved.
-                    Complete chapters in order to unlock new ones and master Python step-by-step.
-                </p>
+        
+        toc_html = f"""
+        <div class="main-container slide-in">
+            <div class="bookmark">📑 TOC</div>
+            <h1 class="chapter-header">📋 Table of Contents</h1>
+            <div class="page-content">
+                Welcome back to your Python journey! Your progress is automatically saved as you learn.
+                Each chapter builds upon the previous one, so complete them in order for the best experience.
             </div>
-            """,
-            unsafe_allow_html=True
-        )
-
+        </div>
+        """
+        
+        st.markdown(toc_html, unsafe_allow_html=True)
+        
+        # Progress indicator
         UIComponents.render_progress_bar(progress_percentage)
-
+        
+        # Chapter list
         for i, chapter in enumerate(chapters):
             is_completed = chapter.id in progress.completed_chapters
             is_current = st.session_state.get('current_chapter_id') == chapter.id
             is_locked = not ProgressManager.is_chapter_unlocked(i, progress)
-
+            
             UIComponents.render_chapter_status(i, chapter, is_completed, is_current, is_locked)
-
+            
             if not is_locked:
-                if st.button(f"Go to Chapter {i+1}", key=f"chapter_btn_{i}", use_container_width=True):
+                if st.button(f"📖 {'Continue' if is_current else 'Read'} Chapter {i+1}", 
+                           key=f"chapter_btn_{i}", use_container_width=True):
                     logger.info(f"User accessed chapter: {chapter.id}")
                     SessionManager.navigate_to(PageType.CHAPTER, chapter.id)
+        
+        # Statistics
+        completed_count = len(progress.completed_chapters)
+        if completed_count > 0:
+            avg_score = sum(progress.quiz_scores.values()) / len(progress.quiz_scores) if progress.quiz_scores else 0
+            total_time = sum(progress.time_spent.values()) if progress.time_spent else 0
+            
+            stats_html = f"""
+            <div class="info-box" style="margin-top: 2rem;">
+                <h4 style="margin-bottom: 1rem; color: var(--primary-color);">📈 Your Learning Statistics</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color);">{completed_count}</div>
+                        <div style="font-size: 0.9rem;">Chapters Completed</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color);">{avg_score:.0f}%</div>
+                        <div style="font-size: 0.9rem;">Average Quiz Score</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color);">{total_time}</div>
+                        <div style="font-size: 0.9rem;">Minutes Studied</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color);">{progress.code_executions}</div>
+                        <div style="font-size: 0.9rem;">Code Runs</div>
+                    </div>
+                </div>
+            </div>
+            """
+            st.markdown(stats_html, unsafe_allow_html=True)
 
 
 class ChapterController:
     """Handles individual chapter logic and rendering"""
-
+    
     @staticmethod
     def render():
         """Render current chapter"""
         st.markdown(UIComponents.load_css(), unsafe_allow_html=True)
-
+        
         chapter_id = st.session_state.get('current_chapter_id')
         if not chapter_id:
             st.error("No chapter selected")
             return
-
+        
         chapter = ChapterRepository.get_chapter_by_id(chapter_id)
         if not chapter:
             st.error(f"Chapter not found: {chapter_id}")
             return
-
+        
         chapter_index = ChapterRepository.get_chapter_index(chapter_id)
         progress = SessionManager.get_progress()
         is_completed = chapter_id in progress.completed_chapters
-
-        st.markdown(f'<div class="main-container">', unsafe_allow_html=True)
-        st.markdown(f'<h1 class="chapter-header">{chapter.title}</h1>', unsafe_allow_html=True)
-        st.markdown(f'<div class="page-content">{chapter.content}</div>', unsafe_allow_html=True)
-
+        
+        # Chapter header
+        chapter_html = f"""
+        <div class="main-container fade-in">
+            <div class="bookmark">Ch. {chapter_index + 1}</div>
+            <h1 class="chapter-header">{chapter.title}</h1>
+            
+            <div class="page-content">
+                {chapter.content.replace('\n\n', '</p><p>').replace('\n', '<br>')}
+            </div>
+        </div>
+        """
+        
+        st.markdown(chapter_html, unsafe_allow_html=True)
+        
         # Code example section
         st.markdown('<div class="code-section">', unsafe_allow_html=True)
         st.code(chapter.code_example, language='python')
         st.markdown('</div>', unsafe_allow_html=True)
-
+        
         # Interactive code section
         ChapterController._render_interactive_section(chapter, chapter_index)
-
+        
         # Quiz section
-        if not is_completed:
-            ChapterController._render_quiz_section(chapter, chapter_id)
-        else:
-            st.success("✅ You've already completed this chapter's quiz!")
-
+        ChapterController._render_quiz_section(chapter, chapter_id, is_completed)
+        
         # Navigation
         ChapterController._render_navigation(chapter_index, is_completed)
-
+        
         # Page number
         total_chapters = len(ChapterRepository.get_all_chapters())
         st.markdown(f'<div class="page-number">Page {chapter_index + 1} of {total_chapters}</div>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-
+    
     @staticmethod
     def _render_interactive_section(chapter: ChapterData, chapter_index: int):
         """Render interactive code section"""
         st.markdown('<div class="interactive-section">', unsafe_allow_html=True)
-        st.markdown("<strong style='color: var(--text-primary);'>Modify the code below and click 'Run' to see the results:</strong>", unsafe_allow_html=True)
-
+        st.markdown("**Modify the code below and click 'Run' to see the results:**")
+        
+        # Code editor
         user_code = st.text_area(
-            "Python Code:",
+            "Python Code:", 
             value=chapter.interactive_code,
             height=AppConfig.CODE_EDITOR_HEIGHT,
-            key=f"code_editor_{chapter_index}"
+            key=f"code_editor_{chapter_index}",
+            help="Write your Python code here. Click 'Run Code' to execute it."
         )
-
-        if st.button("▶️ Run Code", key=f"run_code_{chapter_index}", type="primary"):
-            success, output = SecurityManager.execute_code_safely(user_code)
-            progress = SessionManager.get_progress()
-            progress.code_executions += 1
-            SessionManager.save_progress(progress)
-            if success:
-                st.success("Execution Output:")
-                st.code(output, language='text')
-            else:
-                st.error("Execution Failed:")
-                st.code(output, language='text')
-
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    @staticmethod
-    def _render_quiz_section(chapter: ChapterData, chapter_id: str):
-        """Render quiz section"""
-        st.markdown('<div class="quiz-container">', unsafe_allow_html=True)
-        st.markdown(f'<div class="quiz-question">{chapter.quiz.question}</div>', unsafe_allow_html=True)
-
-        selected_option = st.radio("Choose your answer:", chapter.quiz.options, key=f"quiz_{chapter_id}")
-
-        if st.button("✅ Check Answer", key=f"check_answer_{chapter_id}", type="primary"):
-            correct_answer = chapter.quiz.options[chapter.quiz.correct_index]
-            if selected_option == correct_answer:
-                st.success("🎉 Excellent! That's the correct answer!")
-                st.info(f"💡 **Explanation:** {chapter.quiz.explanation}")
+        
+        col1, col2, col3 = st.columns([2, 1, 1])
+        
+        with col1:
+            if st.button("▶️ Run Code", key=f"run_code_{chapter_index}", type="primary"):
+                success, output = SecurityManager.execute_code_safely(user_code)
+                
+                # Update statistics
                 progress = SessionManager.get_progress()
-                progress = ProgressManager.complete_chapter(chapter_id, 100, progress)
+                progress.code_executions += 1
                 SessionManager.save_progress(progress)
-                st.balloons()
-                time.sleep(2) # Give time for balloons
+                
+                if success:
+                    st.success("Code executed successfully!")
+                    st.code(output, language='text')
+                else:
+                    st.error("Execution failed!")
+                    st.code(output, language='text')
+        
+        with col2:
+            if st.button("🔄 Reset Code", key=f"reset_code_{chapter_index}"):
+                st.session_state[f"code_editor_{chapter_index}"] = chapter.interactive_code
                 st.rerun()
-            else:
-                st.error(f"❌ Not quite right. The correct answer is: **{correct_answer}**")
-                st.info(f"💡 **Explanation:** {chapter.quiz.explanation}")
-
+        
+        with col3:
+            if st.button("📋 Copy Code", key=f"copy_code_{chapter_index}"):
+                st.code(user_code, language='python')
+                st.info("Code displayed above for copying")
+        
         st.markdown('</div>', unsafe_allow_html=True)
-
+    
+    @staticmethod
+    def _render_quiz_section(chapter: ChapterData, chapter_id: str, is_completed: bool):
+        """Render quiz section"""
+        quiz_html = f"""
+        <div class="quiz-container">
+            <div class="quiz-question">{chapter.quiz.question}</div>
+        </div>
+        """
+        st.markdown(quiz_html, unsafe_allow_html=True)
+        
+        # Quiz options
+        selected_option = st.radio(
+            "Choose your answer:",
+            chapter.quiz.options,
+            key=f"quiz_{chapter_id}",
+            help="Select the best answer and click 'Check Answer' to proceed."
+        )
+        
+        col1, col2 = st.columns([1, 1])
+        
+        with col1:
+            if st.button("✅ Check Answer", key=f"check_answer_{chapter_id}", type="primary"):
+                correct_answer = chapter.quiz.options[chapter.quiz.correct_index]
+                is_correct = selected_option == correct_answer
+                
+                if is_correct:
+                    st.success("🎉 Excellent! That's the correct answer!")
+                    if chapter.quiz.explanation:
+                        st.info(f"💡 **Explanation:** {chapter.quiz.explanation}")
+                    
+                    # Mark chapter as completed
+                    progress = SessionManager.get_progress()
+                    progress = ProgressManager.complete_chapter(chapter_id, 100, progress)
+                    SessionManager.save_progress(progress)
+                    
+                    st.balloons()
+                    logger.info(f"User completed chapter: {chapter_id}")
+                    
+                else:
+                    st.error(f"❌ Not quite right. The correct answer is: **{correct_answer}**")
+                    if chapter.quiz.explanation:
+                        st.info(f"💡 **Explanation:** {chapter.quiz.explanation}")
+        
+        with col2:
+            if st.button("💡 Hint", key=f"hint_{chapter_id}"):
+                # Provide a hint by highlighting key concepts
+                st.info("💭 **Hint:** Review the key concepts in the chapter content above. The answer relates to the main topic discussed.")
+    
     @staticmethod
     def _render_navigation(chapter_index: int, is_completed: bool):
         """Render navigation buttons"""
         total_chapters = len(ChapterRepository.get_all_chapters())
-        cols = st.columns(3)
-
-        with cols[0]:
+        
+        col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+        
+        with col1:
+            if st.button("📋 Contents", key="nav_toc"):
+                SessionManager.navigate_to(PageType.TABLE_OF_CONTENTS)
+        
+        with col2:
             if chapter_index > 0:
                 prev_chapter = ChapterRepository.get_all_chapters()[chapter_index - 1]
-                if st.button("⬅️ Previous Chapter", use_container_width=True):
+                if st.button("⬅️ Previous", key="nav_prev"):
                     SessionManager.navigate_to(PageType.CHAPTER, prev_chapter.id)
-
-        with cols[1]:
-            if st.button("📋 Back to Contents", use_container_width=True):
-                SessionManager.navigate_to(PageType.TABLE_OF_CONTENTS)
-
-        with cols[2]:
+        
+        with col3:
             if chapter_index < total_chapters - 1:
                 next_chapter = ChapterRepository.get_all_chapters()[chapter_index + 1]
-                st.button(
-                    "➡️ Next Chapter",
-                    key="nav_next",
-                    use_container_width=True,
-                    disabled=not is_completed,
-                    on_click=SessionManager.navigate_to,
-                    args=(PageType.CHAPTER, next_chapter.id),
-                    help="Complete the quiz to unlock the next chapter"
-                )
+                if is_completed:
+                    if st.button("➡️ Next", key="nav_next"):
+                        SessionManager.navigate_to(PageType.CHAPTER, next_chapter.id)
+                else:
+                    st.button("🔒 Complete Quiz", disabled=True, help="Complete the quiz to unlock the next chapter")
+        
+        with col4:
+            if st.button("🏠 Home", key="nav_home"):
+                SessionManager.navigate_to(PageType.COVER)
 
 
 # ==================== MAIN APPLICATION ====================
 
 def main():
     """Main application entry point"""
+    # Page configuration
     st.set_page_config(
         page_title=AppConfig.APP_TITLE,
         page_icon=AppConfig.APP_ICON,
-        layout="centered",
-        initial_sidebar_state="auto"
+        layout="wide",
+        initial_sidebar_state="collapsed",
+        menu_items={
+            'Get Help': 'https://docs.python.org/',
+            'Report a bug': None,
+            'About': f"Python Interactive Textbook v{AppConfig.VERSION} - Learn Python through an immersive, book-like experience."
+        }
     )
-
+    
+    # Initialize session
     SessionManager.initialize_session()
-
+    
+    # Sidebar for quick navigation and settings
     with st.sidebar:
-        st.title(f"{AppConfig.APP_ICON} Navigation")
-        if st.button("🏠 Home", use_container_width=True):
+        st.title(f"{AppConfig.APP_ICON} Quick Navigation")
+        
+        # Navigation buttons
+        if st.button("🏠 Cover Page", use_container_width=True):
             SessionManager.navigate_to(PageType.COVER)
-        if st.button("📋 Table of Contents", use_container_width=True):
+        
+        if st.button("📋 Contents", use_container_width=True):
             SessionManager.navigate_to(PageType.TABLE_OF_CONTENTS)
         
         st.divider()
-
+        
+        # Progress overview
         progress = SessionManager.get_progress()
         progress_percentage = ProgressManager.calculate_overall_progress(progress)
-        st.markdown("### Your Progress")
+        
+        st.markdown("### 📊 Progress")
         st.progress(progress_percentage / 100)
-        st.caption(f"{progress_percentage:.1f}% Complete")
-
+        st.write(f"**{progress_percentage:.1f}% Complete**")
+        st.write(f"📚 {len(progress.completed_chapters)} chapters finished")
+        
+        if progress.completed_chapters:
+            st.markdown("**✅ Completed:**")
+            chapters = ChapterRepository.get_all_chapters()
+            for chapter in chapters:
+                if chapter.id in progress.completed_chapters:
+                    chapter_index = ChapterRepository.get_chapter_index(chapter.id)
+                    st.write(f"• Chapter {chapter_index + 1}")
+        
+        st.divider()
+        
+        # Session info
+        if progress.code_executions > 0:
+            st.markdown("### 📈 Session Stats")
+            st.write(f"💻 Code executions: {progress.code_executions}")
+            session_time = (datetime.now() - st.session_state.session_start_time).seconds // 60
+            st.write(f"⏱️ Session time: {session_time} min")
+        
+        st.divider()
+        
+        # Help section
+        st.markdown("### ❓ Need Help?")
+        st.markdown("""
+        - 🐍 [Python.org](https://python.org)
+        - 📖 [Python Tutorial](https://docs.python.org/tutorial/)
+        - 💬 [Python Community](https://python.org/community/)
+        """)
+        
+        # Reset progress (for testing/demo)
+        st.divider()
+        if st.button("🔄 Reset Progress", help="Clear all progress and start over"):
+            if st.button("⚠️ Confirm Reset", type="secondary"):
+                st.session_state.user_progress = ProgressManager.initialize_progress()
+                st.session_state.current_page = PageType.COVER.value
+                st.session_state.current_chapter_id = None
+                st.rerun()
+    
+    # Main content routing
     try:
         current_page = PageType(st.session_state.current_page)
+        
         if current_page == PageType.COVER:
             CoverPageController.render()
         elif current_page == PageType.TABLE_OF_CONTENTS:
             TableOfContentsController.render()
         elif current_page == PageType.CHAPTER:
             ChapterController.render()
+        else:
+            st.error(f"Unknown page: {current_page}")
+            
+    except ValueError as e:
+        logger.error(f"Invalid page type: {st.session_state.current_page}")
+        st.error("Navigation error occurred. Returning to cover page.")
+        SessionManager.navigate_to(PageType.COVER)
+    
     except Exception as e:
-        logger.error(f"An error occurred: {e}", exc_info=True)
-        st.error("An unexpected error occurred. Please try again.")
-        if st.button("Go to Home"):
-            SessionManager.navigate_to(PageType.COVER)
+        logger.error(f"Unexpected error in main: {str(e)}")
+        logger.error(traceback.format_exc())
+        
+        st.error("An unexpected error occurred. Please refresh the page.")
+        st.code(f"Error details: {str(e)}", language='text')
+        
+        # Provide recovery options
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("🏠 Go to Cover Page"):
+                SessionManager.navigate_to(PageType.COVER)
+        with col2:
+            if st.button("📋 Go to Contents"):
+                SessionManager.navigate_to(PageType.TABLE_OF_CONTENTS)
 
+
+# ==================== APPLICATION ENTRY POINT ====================
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        st.error(f"Critical application error: {str(e)}")
+        st.code(traceback.format_exc(), language='text')
+        logger.critical(f"Critical error: {str(e)}")
+        logger.critical(traceback.format_exc())
