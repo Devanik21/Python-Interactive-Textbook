@@ -1166,7 +1166,7 @@ class UIComponents:
             }
             
             .interactive-section::before {
-                content: '🚀 Interactive Code';
+                content: ' Interactive Code';
                 position: absolute;
                 top: -12px;
                 left: 20px;
@@ -1519,7 +1519,7 @@ class CoverPageController:
         # Center the start button
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            if st.button("🚀 Begin Your Journey", key="start_journey", use_container_width=True, type="primary"):
+            if st.button(" Begin Your Journey", key="start_journey", use_container_width=True, type="primary"):
                 logger.info("User started their learning journey")
                 SessionManager.navigate_to(PageType.TABLE_OF_CONTENTS)
 
