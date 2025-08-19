@@ -676,22 +676,23 @@ class UIComponents:
             @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Source+Code+Pro:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap');
             
             :root {
-                --primary-color: #8b4513;
-                --secondary-color: #d4af37;
-                --accent-color: #dc143c;
-                --background-light: #fefcf7;
-                --background-dark: #f8f5ee;
-                --text-primary: #2c1810;
-                --text-secondary: #666;
-                --border-color: #e8dcc0;
-                --shadow-light: 0 2px 10px rgba(0,0,0,0.05);
-                --shadow-medium: 0 5px 20px rgba(0,0,0,0.1);
-                --shadow-heavy: 0 10px 30px rgba(0,0,0,0.15);
+                --primary-color: #d4af37;
+                --secondary-color: #ffd700;
+                --accent-color: #ff6b6b;
+                --background-light: #1a1a1a;
+                --background-dark: #0d1117;
+                --text-primary: #e6e6e6;
+                --text-secondary: #b3b3b3;
+                --border-color: #404040;
+                --shadow-light: 0 2px 10px rgba(0,0,0,0.3);
+                --shadow-medium: 0 5px 20px rgba(0,0,0,0.4);
+                --shadow-heavy: 0 10px 30px rgba(0,0,0,0.5);
             }
             
             .stApp {
-                background: linear-gradient(135deg, var(--background-light) 0%, var(--background-dark) 100%);
+                background: linear-gradient(135deg, var(--background-dark) 0%, var(--background-light) 100%);
                 background-attachment: fixed;
+                color: var(--text-primary);
             }
             
             .main-container {
@@ -705,6 +706,7 @@ class UIComponents:
                 position: relative;
                 font-family: 'Crimson Text', serif;
                 line-height: 1.6;
+                color: var(--text-primary);
             }
             
             .main-container::before {
@@ -722,7 +724,7 @@ class UIComponents:
             .cover-page {
                 text-align: center;
                 padding: 4rem 2rem;
-                background: linear-gradient(135deg, #1a0d08 0%, var(--primary-color) 50%, #654321 100%);
+                background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #333333 100%);
                 color: var(--secondary-color);
                 border-radius: 20px;
                 margin: -2.5rem -2.5rem 2rem -2.5rem;
@@ -761,7 +763,7 @@ class UIComponents:
             }
             
             .chapter-header {
-                color: var(--primary-color);
+                color: var(--secondary-color);
                 font-size: 2.2rem;
                 font-weight: 600;
                 margin-bottom: 2rem;
@@ -866,7 +868,7 @@ class UIComponents:
             }
             
             .quiz-question {
-                color: var(--primary-color);
+                color: var(--secondary-color);
                 font-size: 1.3rem;
                 font-weight: 600;
                 margin-bottom: 1.5rem;
@@ -908,7 +910,7 @@ class UIComponents:
             }
             
             .toc-item {
-                background: linear-gradient(135deg, var(--background-light) 0%, #f5f2e8 100%);
+                background: linear-gradient(135deg, var(--background-light) 0%, #2a2a2a 100%);
                 border: 2px solid var(--border-color);
                 border-radius: 12px;
                 padding: 1.5rem;
@@ -917,6 +919,7 @@ class UIComponents:
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 position: relative;
                 overflow: hidden;
+                color: var(--text-primary);
             }
             
             .toc-item::before {
@@ -943,21 +946,21 @@ class UIComponents:
             .locked-chapter {
                 opacity: 0.6;
                 pointer-events: none;
-                background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
-                border-color: #ccc;
+                background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+                border-color: #666;
             }
             
             .completed-chapter {
-                background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+                background: linear-gradient(135deg, #1a3d1a 0%, #2d5a2d 100%);
                 border-color: #28a745;
-                box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+                box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
             }
             
             .current-chapter {
-                background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+                background: linear-gradient(135deg, #3d3d1a 0%, #5a5a2d 100%);
                 border-color: #ffc107;
                 border-width: 3px;
-                box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);
+                box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
             }
             
             .page-number {
@@ -971,9 +974,9 @@ class UIComponents:
             }
             
             .nav-button {
-                background: linear-gradient(135deg, var(--primary-color) 0%, #654321 100%);
+                background: linear-gradient(135deg, var(--secondary-color) 0%, #b8860b 100%);
                 border: none;
-                color: white;
+                color: var(--background-dark);
                 padding: 12px 24px;
                 border-radius: 8px;
                 cursor: pointer;
